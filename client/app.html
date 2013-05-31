@@ -1,18 +1,18 @@
 ﻿<head>
-  <title>Colourco.de - find your colour scheme</title>
+  <title>colourcode - find your colour scheme</title>
   <meta name="viewport" content="width=device-width" />
   <meta name="description" content="colourco.de is an online designer tool, which allows you to easily and intuitively combine colours.">
   <meta name="keywords" content="color, colour, scheme, colorscheme, colourscheme, design, designer, palette, colourset, colorset, webcolours, webcolors, web, blind, live, preview, zaku, colorpicker">
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
   <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel="stylesheet" type="text/css">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="apple-touch-icon" href="touch-icon-iphone.png" />
-  <link rel="apple-touch-icon" sizes="114x114" href="touch-icon-iphone.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon-precomposed.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-precomposed.png" />
   <meta property="og:title" content="Colourco.de - find your colour scheme" />
   <meta property="og:description" content="colourco.de is an online designer tool, which allows you to easily and intuitively combine colours." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="http://colourco.de" />
-  <meta property="og:image" content="http://colourco.de/touch-icon-iphone.png" />
+  <meta property="og:url" content="colourco.de" />
+  <meta property="og:image" content="http://colourco.de/apple-touch-icon-precomposed.png" />
   <meta property="og:site_name" content="Colourco.de" />
   <meta property="fb:admins" content="100002137777972" />
   <!--[if (gte IE 6)&(lte IE 8)]>
@@ -23,90 +23,16 @@
 <body>
   <div class="flipper code">
     <div class="front">
-      <header>
-        <div>
-          <div class="logo">
-            <a href="/" class="short">colour</a><a href="/" class="long">colourcode</a><br class="long" />
-            <span>
-              <input type="radio" name="mode" id="mode-code" value="code" checked /><label for="mode-code">code</label>
-              <input type="radio" name="mode" id="mode-scheme" value="scheme" /><label for="mode-scheme">scheme</label>
-            </span>
-          </div>
-          <div class="mode">
-            <b>scheme mode</b><br />
-            <span>
-              <input type="radio" name="scheme" id="scheme-mono" value="mono" /><label for="scheme-mono"><span class="long">mono</span><span class="short">1</span></label>
-              <input type="radio" name="scheme" id="scheme-mono-d" value="mono-d" /><label for="scheme-mono-d" title="mono &amp; dark gray"><span class="long">mono-d</span><span class="short">1-d</span></label>
-              <input type="radio" name="scheme" id="scheme-mono-l" value="mono-l" /><label for="scheme-mono-l" title="mono &amp; light gray"><span class="long">mono-l</span><span class="short">1-l</span></label>
-              <input type="radio" name="scheme" id="scheme-ana" value="ana" /><label for="scheme-ana" title="analogic colours"><span class="long">ana</span><span class="short">1-a</span></label>
-              <input type="radio" name="scheme" id="scheme-comp" value="comp" /><label for="scheme-comp" title="complement"><span class="long">comp</span><span class="short">2</span></label>
-              <input type="radio" name="scheme" id="scheme-ana-c" value="ana-c" /><label for="scheme-ana-c" title="analogic colours &amp; complement"><span class="long">ana-c</span><span class="short">2-a</span></label>
-              <input type="radio" name="scheme" id="scheme-tri" value="tri" /><label for="scheme-tri" title="triad"><span class="long">triad</span><span class="short">3</span></label>
-              <input type="radio" name="scheme" id="scheme-quad" value="quad" /><label for="scheme-quad"><span class="long">quad</span><span class="short">4</span></label>
-            </span>
-          </div>
-          <div class="convert">
-            <div>
-              <i class="long">convert your color</i><i class="short">convert</i><br />
-              <span>
-                <input type="radio" name="format" id="format-hex" value="Hex" checked /><label for="format-hex">hex</label>
-                <input type="radio" name="format" id="format-rgb" value="Rgb" /><label for="format-rgb">rgb</label>
-                <input type="radio" name="format" id="format-hsl" value="Hsl" /><label for="format-hsl">hsl</label></span>
-            </div>
-            <div>
-              <input type="text" placeholder="#123456" />
-            </div>
-          </div>
-        </div>
-      </header>
+      {{> menu}}
+      <span class="icon">C</span>
+      <a title="save scheme as image" class="icon save image" style="display: none;">A</a>
+      <a title="save scheme as less" class="icon save less" style="display: none;">z</a>
       <section class="code show firstrun">
         <div class="colors"></div>
       </section>
       <section class="scheme">
         <div class="colors"></div>
       </section>
-      <footer>
-        <div class="default">
-          <div class="copyright">
-            <span class="long">Tamino Martinius</span><span class="short">TM</span>
-            <a title="Tamino Martinius on Twitter" href="https://twitter.com/TaminoMartinius" target="_blank" class="icon">n</a>
-            <a title="Homepage of Tamino Martinius" href="http://zaku.eu" target="_blank" class="icon">q</a>
-            <a title="Tamino Martinius on Codepen" href="http://codepen.io/Zaku/" target="_blank" class="icon">o</a><br />
-            <span class="long" style="margin-right: 1em;">Andreas Storm</span><span class="short" style="margin-right: 0.2em;">AS</span>
-            <a title="Andreas Storm on Twitter" href="https://twitter.com/st8rmi" target="_blank" class="icon">n</a>
-            <a title="Homepage of Andreas Storm" href="http://andreasstorm.com" target="_blank" class="icon">q</a>
-            <a title="Andreas Storm on Dribbble" href="http://dribbble.com/andreasstorm" target="_blank" class="icon">m</a>
-          </div>
-          <div class="links">
-            <a title="save scheme as image" class="icon save image">A</a>
-            <a title="save scheme as less" class="icon save less">z</a>
-            <a href="https://github.com/Zaku-eu/colourco.de" target="_blank" title="view sourcecode on github" class="icon github">B</a>
-            <a title="show help &amp; controls" class="icon help">h</a>
-            <a title="report issue or request feature" href="https://github.com/Zaku-eu/colourco.de/issues" target="_blank" class="icon">i</a>
-            <a title="send mail to Tamino Martinius" href="mailto:dev@zaku.eu" class="icon">p</a>
-            <a title="show legal" class="legal">§</a>
-          </div>
-          <div class="social">
-            <div class="fb">
-              <div class="fb-like" data-href="http://colourco.de/" data-send="false" data-layout="button_count" data-width="200" data-show-faces="false" data-font="arial"></div>
-            </div>
-            <div class="po">
-              <div class="g-plusone" data-size="medium"></div>
-            </div>
-            <div class="tw"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://colourco.de" data-via="TaminoMartinius" data-lang="en" data-related="TaminoMartinius"></a></div>
-          </div>
-        </div>
-        <div class="shortcuts code">
-          ctrl + <span class="icon" title="change hue">l</span> left/right
-          <span class="icon" title="change lightness">k</span> up/down
-          <span class="icon" title="change saturation">r</span> shift + up/down
-        </div>
-        <div class="shortcuts scheme">
-          ctrl + <span class="icon" title="change hue">l</span> left/right
-          <span class="icon" title="change lightness">k</span> up/down
-          <span class="icon" title="change contrast">j</span> shift + up/down
-        </div>
-      </footer>
     </div>
     <div class="back">
       <div class="flip-modal">
@@ -124,11 +50,22 @@
               phone: +49 1577 3752563<br />
               USt-IdNr.: DE284757237
             </p>
+          </div>
+          <h2>
+            <label for="design">Website, Layout &amp; Design, SQL-Database application</label></h2>
+          <input type="radio" name="legal" id="design" value="design" />
+          <div>
             <h4>Website, Layout &amp; Design, SQL-Database application</h4>
             <p>
               Zaku.eu - Tamino Martinius<br />
               Lehdenstraße 21<br />
               DE 06847 Dessau-Roßlau
+            </p>
+            <h4>Design</h4>
+            <p>
+              Andreas Storm<br />
+              B.-Kellermann-Str. 6<br />
+              DE 06366 Köthen
             </p>
           </div>
           <h2>
@@ -276,5 +213,100 @@
   <div id="fb-root"></div>
   {{> analytics}}
 </body>
+
+<template name="menu">
+  <nav>
+    <div class="logo">
+      <a href="#"><img src="colourcode-logo.png" alt=""></a>
+      <br/>
+      <span>
+        <input type="radio" name="mode" id="mode-code" value="code" checked /><label for="mode-code">code</label>
+        <input type="radio" name="mode" id="mode-scheme" value="scheme" /><label for="mode-scheme">scheme</label>
+      </span>
+    </div>
+    <div class="mode">
+      <i>schemes</i><br />
+      <span>
+        <input type="radio" name="scheme" id="scheme-mono" value="mono" />
+        <label for="scheme-mono"><span class="long">monochromatic</span><span class="short">monochromatic</span></label><br/>
+        <input type="radio" name="scheme" id="scheme-mono-d" value="mono-d" /><label for="scheme-mono-d" title="mono &amp; dark gray"><span class="long">monochromatic + dark gray</span><span class="short">mono + dark gray</span></label><br/>
+        <input type="radio" name="scheme" id="scheme-mono-l" value="mono-l" /><label for="scheme-mono-l" title="mono &amp; light gray"><span class="long">monochromatik + light gray</span><span class="short">mono + light gray</span></label><br/>
+        <input type="radio" name="scheme" id="scheme-ana" value="ana" /><label for="scheme-ana" title="analogic colours"><span class="long">analogic</span><span class="short">analogic</span></label><br/>
+        <input type="radio" name="scheme" id="scheme-comp" value="comp" /><label for="scheme-comp" title="complement"><span class="long">complement</span><span class="short">complement</span></label><br/>
+        <input type="radio" name="scheme" id="scheme-ana-c" value="ana-c" /><label for="scheme-ana-c" title="analogic colours &amp; complement"><span class="long">analogic + complement</span><span class="short">ana + comp</span></label><br/>
+        <input type="radio" name="scheme" id="scheme-tri" value="tri" /><label for="scheme-tri" title="triad"><span class="long">triad</span><span class="short">triad</span></label><br/>
+        <input type="radio" name="scheme" id="scheme-quad" value="quad" /><label for="scheme-quad"><span class="long">quad</span><span class="short">quad</span></label>
+      </span>
+    </div>
+    <div class="convert">
+      <div>
+        <i>convert your color</i><br />
+        <span>
+          <input type="radio" name="format" id="format-hex" value="Hex" checked /><label for="format-hex">hex</label>
+          <input type="radio" name="format" id="format-rgb" value="Rgb" /><label for="format-rgb">rgb</label>
+          <input type="radio" name="format" id="format-hsl" value="Hsl" /><label for="format-hsl">hsl</label></span>
+      </div>
+      <div>
+        <input type="text" placeholder="#123456" />
+      </div>
+    </div>
+    <br/>
+    <div class="links">
+      <a href="https://github.com/Zaku-eu/colourco.de" target="_blank" title="view sourcecode on github">
+        <span class="icon">B</span>
+        <i>view source</i>
+      </a><br/>
+      <a title="show help &amp; controls" class="help">
+        <span class="icon">h</span>
+        <i>help</i>
+      </a><br/>
+      <a title="report issue or request feature" href="https://github.com/Zaku-eu/colourco.de/issues" target="_blank">
+        <span class="icon">i</span>
+        <i>report bug / request feature</i>
+      </a><br/>
+      <a title="send mail to Tamino Martinius" href="mailto:dev@zaku.eu">
+        <span class="icon">p</span>
+        <i>contact</i>
+      </a><br/>
+      <a title="show legal" class="legal">
+        <span class="icon" style="margin: 0 0.25em;">§</span>
+        <i>legal</i>
+      </a>
+    </div>
+    <br/>
+    <div class="copyright">
+      <span>Tamino Martinius</span>
+      <a title="Tamino Martinius on Twitter" href="https://twitter.com/TaminoMartinius" target="_blank" class="icon">n</a>
+      <a title="Homepage of Tamino Martinius" href="http://zaku.eu" target="_blank" class="icon">q</a>
+      <a title="Tamino Martinius on Codepen" href="http://codepen.io/Zaku/" target="_blank" class="icon">o</a><br />
+      <span style="margin-right: 1.2em;">Andreas Storm</span>
+      <a title="Andreas Storm on Twitter" href="https://twitter.com/st8rmi" target="_blank" class="icon">n</a>
+      <a title="Homepage of Andreas Storm" href="http://andreasstorm.com" target="_blank" class="icon">q</a>
+      <a title="Andreas Storm on Dribbble" href="http://dribbble.com/andreasstorm" target="_blank" class="icon">m</a>
+    </div>
+    <br/>
+    <div class="social">
+      <div class="fb">
+        <div class="fb-like" data-href="http://colourco.de/" data-send="false" data-layout="button_count" data-width="200" data-show-faces="false" data-font="arial"></div>
+      </div>
+      <div class="po">
+        <div class="g-plusone" data-href="http://colourco.de" data-size="medium"></div>
+      </div>
+      <div class="tw"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://colourco.de" data-via="TaminoMartinius" data-lang="en" data-related="TaminoMartinius"></a></div>
+    </div>
+    <!--
+    <div class="shortcuts code">
+      ctrl + <span class="icon" title="change hue">l</span> left/right
+      <span class="icon" title="change lightness">k</span> up/down
+      <span class="icon" title="change saturation">r</span> shift + up/down
+    </div>
+    <div class="shortcuts scheme">
+      ctrl + <span class="icon" title="change hue">l</span> left/right
+      <span class="icon" title="change lightness">k</span> up/down
+      <span class="icon" title="change contrast">j</span> shift + up/down
+    </div>
+    -->
+  </nav>
+</template>
 
 <template name="analytics"></template>

@@ -69,31 +69,27 @@ Meteor.startup () ->
     $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .info > span").css 'background-color', hslToHexText(hsl)
     $("section.#{mode} > .colors > div:nth-child(#{index + 1})").css 'color', hslToIhxText(hsl)
     $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .save a").css 'color', hslToIhxText(hsl)
+    $(".front > .icon").css 'color', hslToIhxText(hsl) if index is 0
     strColor = ''
     if settings.mode is 'code'
       strColor = hslToHexText(hsl)
       colors = (hslToHexText color for color in settings[settings.mode].colors)
       colors.pop() if settings[settings.mode].locked is false
       if colors.length > 0
-        $('footer .links .save').show()
+        $('.front > .icon.save').show()
         strColors = colors.join(',')
-        $("footer .links .save.less").attr 'href', "http://api.colourco.de/export/less/#{encodeURIComponent(strColors)}"
-        $("footer .links .save.image").attr 'href', "http://api.colourco.de/export/png/#{encodeURIComponent(strColors)}"
+        $(".front > .icon.save.less").attr 'href', "http://api.colourco.de/export/less/#{encodeURIComponent(strColors)}"
+        $(".front > .icon.save.image").attr 'href', "http://api.colourco.de/export/png/#{encodeURIComponent(strColors)}"
       else
-        $('footer .links .save').hide()
+        $('.front > .icon.save').hide()
     else
       colors = (hslToHexText color for color in settings[settings.mode].colors)
       strColor = colors.join(',')
     $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .save a:nth-child(2)").attr 'href', "http://api.colourco.de/export/less/#{encodeURIComponent(strColor)}"
     $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .save a:nth-child(3)").attr 'href', "http://api.colourco.de/export/png/#{encodeURIComponent(strColor)}"
-
-    if settings[mode].colors.length > 5
-      $("section.#{mode} > .colors > div").css("box-shadow","0 -1px 0 hsl(0, 0%, 60%) inset, 0 1px 0 hsl(0, 0%, 60%) inset")
-    else
-      $("section.#{mode} > .colors > div").css("box-shadow", "")
     if settings[mode].locked is false and index is settings[mode].edit
-      colorClass = $('header .convert input[type=radio]:checked').val()
-      $('header input[type=text]').val(window["hslTo#{colorClass}Text"](hsl))
+      colorClass = $('nav .convert input[type=radio]:checked').val()
+      $('nav input[type=text]').val(window["hslTo#{colorClass}Text"](hsl))
       $("section.#{mode} .locked").removeClass('locked')
     else if settings[mode].locked is true
       $("section.#{mode} > .colors > .color").addClass('locked')
@@ -104,7 +100,7 @@ Meteor.startup () ->
       maxX = $('.color').width() * 0.99
       maxY = $('.color').height() * 0.99
       x = e.pageX - 2 - settings[mode].edit * maxX
-      y = e.pageY - $('header').height() - 2
+      y = e.pageY
       settings[mode].colors[settings[mode].edit] = new d3.hsl ~~(x / maxX * 360), settings[mode].colors[settings[mode].edit].s, ~~(y / maxY * 100) / 100
       draw()
     return
@@ -184,6 +180,7 @@ Meteor.startup () ->
         else
           $("section.#{settings.mode} > .colors > div").css("box-shadow", "")
         $root.remove()
+        setColors()
         return
       , 500)
     return
@@ -214,38 +211,38 @@ Meteor.startup () ->
   $('body').bind "mousewheel", wheelEvent
   $('body').bind "DOMMouseScroll", wheelEvent
 
-  $('header .convert input[type=radio]').change () ->
-    colorClass = $('header .convert input[type=radio]:checked').val()
-    $('header input[type=text]').val(window["hslTo#{colorClass}Text"](settings[settings.mode].colors[settings[settings.mode].edit]))
+  $('nav .convert input[type=radio]').change () ->
+    colorClass = $('nav .convert input[type=radio]:checked').val()
+    $('nav input[type=text]').val(window["hslTo#{colorClass}Text"](settings[settings.mode].colors[settings[settings.mode].edit]))
     return
 
-  $('header .logo input[type=radio]').change () ->
-    tmpMode = $('header .logo input[type=radio]:checked').val()
+  $('nav .logo input[type=radio]').change () ->
+    tmpMode = $('nav .logo input[type=radio]:checked').val()
     if tmpMode isnt settings.mode
       $('body > div').removeClass(settings.mode)
-      settings.mode = $('header .logo input[type=radio]:checked').val()
+      settings.mode = $('nav .logo input[type=radio]:checked').val()
       $('body > div').addClass(settings.mode)
       if settings.mode is 'code'
-        $('footer .links .save').show()
-        $('header .mode input[type=radio]:checked').attr('checked', null)
+        $('.front > .icon.save').show()
+        $('nav .mode input[type=radio]:checked').attr('checked', null)
       else if settings.mode is 'scheme'
-        $('footer .links .save').hide()
-        $("header .mode #scheme-#{settings.scheme.mode}").click()
-      $('header .logo a.long').html "colour#{settings.mode}"
+        $('.front > .icon.save').hide()
+        $("nav .mode #scheme-#{settings.scheme.mode}").click()
+      $('nav .logo a.long').html "colour#{settings.mode}"
       $('section.hide').removeClass('hide')
       $('section.show').addClass('hide').removeClass('show')
       $("section.#{settings.mode}").addClass('show')
       $('section.firstrun').removeClass('firstrun')
     return
 
-  $('header .mode input[type=radio]').change () ->
-    settings.scheme.mode = $('header .mode input[type=radio]:checked').val()
-    if $('header .logo input[type=radio]:checked').val() isnt 'scheme'
-      $('header .logo #mode-scheme').click()
+  $('nav .mode input[type=radio]').change () ->
+    settings.scheme.mode = $('nav .mode input[type=radio]:checked').val()
+    if $('nav .logo input[type=radio]:checked').val() isnt 'scheme'
+      $('nav .logo #mode-scheme').click()
     setColors()
     return
 
-  $('header input').keyup () ->
+  $('nav input').keyup () ->
     if settings[settings.mode].edit >= 0 and settings[settings.mode].edit < settings[settings.mode].colors.length
       settings[settings.mode].colors[settings[settings.mode].edit] = new d3.hsl $(this).val()
       settings[settings.mode].locked = true
@@ -320,19 +317,26 @@ Meteor.startup () ->
     settings[mode].locked = true
     draw()
     $('.flipper').addClass('hover')
+    $(".flipper, nav + span.icon").removeClass("menu")
     return
 
-  $('footer .legal').click () ->
+  $('nav .legal').click () ->
     showBack 'legal'
     return
 
-  $('footer .help').click () ->
+  $('nav .help').click () ->
     showBack 'help'
     return
 
   $('.flipper > .back button').click () ->
     $('.flipper').removeClass('hover')
     return
+
+  $("nav + span.icon").click () ->
+    $(".flipper, nav + span.icon").addClass("menu")
+
+  $("nav").mouseleave () ->
+    $(".flipper, nav + span.icon").removeClass("menu")
 
   $(window).keydown (e) ->
     if e.ctrlKey
@@ -391,9 +395,9 @@ Meteor.startup () ->
     addColor(null, 'scheme')
     addColor(null, 'scheme')
     settings.scheme.edit = 2
-    $('header .mode input[type=radio]:checked').attr('checked', null)
-    $('header .logo input[type=radio]:checked').attr('checked', null)
-    $('header .logo #mode-code').click()
+    $('nav .mode input[type=radio]:checked').attr('checked', null)
+    $('nav .logo input[type=radio]:checked').attr('checked', null)
+    $('nav .logo #mode-code').click()
     $('section.scheme .color').removeClass('color')
     $('section.scheme > .colors > div:nth-child(3)').addClass('color')
     $("section.scheme > .colors > div").unbind()
@@ -407,10 +411,11 @@ Meteor.startup () ->
         maxX = $('section.scheme').width() * 0.99
         maxY = $('section.scheme').height() * 0.99
         x = e.pageX
-        y = e.pageY - $('header').height() - 2
+        y = e.pageY
         settings.scheme.colors[2] = new d3.hsl ~~(x / maxX * 360), 0.5, (~~(y / maxY * 100) / 100 + 0.15) * 0.7
         setColors()
       return
+    setColors()
 
   init()
 
