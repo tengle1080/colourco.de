@@ -146,7 +146,7 @@ body > div.show-shortcuts {
   }
 
   nav {
-    position: fixed;
+    position: absolute;
     background-color: #1A1E21;
     width: 15em;
     height: 100%;
@@ -172,10 +172,10 @@ body > div.show-shortcuts {
       width: 18em;
       text-align: center;
 
-      margin-left: -2em;
+      margin-left: -0.5em;
 
       > div {
-        float: right !important;
+        float: left !important;
         overflow: hidden;
 
         &.tw {
@@ -183,7 +183,8 @@ body > div.show-shortcuts {
         }
 
         &.po {
-          width: 75px;
+          margin-left: 7px;
+          width: 83px;
         }
 
         &.fb {
