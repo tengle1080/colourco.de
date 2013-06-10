@@ -11,4 +11,12 @@ Meteor.startup(function(){
     js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=277582698988224";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
+  //flattr
+  (function() {
+        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+        t.parentNode.insertBefore(s, t);
+    })();
 });
