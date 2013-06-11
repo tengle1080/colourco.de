@@ -560,13 +560,12 @@ body > div.show-shortcuts {
                 left: 50%;
               }
 
-              > span {
+              span {
                 display: inline-block;
                 width: 8em;
                 transition: background-color 0.5s;
 
                 > b {
-                  font-weight: @normalFontWeight;
                   transition: opacity 0.25s;
 
                   &:hover {
@@ -575,7 +574,7 @@ body > div.show-shortcuts {
                 }
 
                 &.hex, &.rgb, &.hsl, &.hcl, &.lab {
-                  opacity: 0.75;
+                  opacity: 0;
                   transition: opacity 0.25s, background-color 0.5s;
 
                   &:hover {
@@ -641,8 +640,8 @@ body > div.show-shortcuts {
           &:hover {
             > .center {
               > .info {
-                > span {
-                  opacity: 1;
+                span {
+                  opacity: 1 !important;
 
                   &.ctl {
                     b {
@@ -691,7 +690,7 @@ body > div.show-shortcuts {
 
             > .center {
               > .info {
-                > span {
+                span {
                   transition: opacity 0.25s;
 
                   b {
@@ -716,7 +715,7 @@ body > div.show-shortcuts {
               > .info {
                 cursor: text;
 
-                > span {
+                span {
                   b {
                     cursor: text;
 
@@ -863,6 +862,18 @@ body > div.show-shortcuts {
 
   &.hover {
     transform: rotateY(180deg);
+  }
+
+  &.hex > .front section >.colors > div >.center > .info .colorcodes span.hex {
+    opacity: 0.4;
+  }
+
+  &.rgb > .front section >.colors > div >.center > .info .colorcodes span.rgb {
+    opacity: 0.4;
+  }
+
+  &.hsl > .front section >.colors > div >.center > .info .colorcodes span.hsl {
+    opacity: 0.4;
   }
 }
 

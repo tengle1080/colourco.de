@@ -12,6 +12,7 @@ Meteor.startup () ->
       colors: []
       edit: -1;
       locked: false
+      activatedNew: true
 
   d3.ihx = (hsl) -> #inverted hex
     rgb = new d3.rgb hsl
@@ -213,6 +214,8 @@ Meteor.startup () ->
 
   $('nav .convert input[type=radio]').change () ->
     colorClass = $('nav .convert input[type=radio]:checked').val()
+    $(".flipper").removeClass("hex").removeClass("rgb").removeClass("hsl")
+    $(".flipper").addClass(colorClass.toLowerCase())
     $('nav input[type=text]').val(window["hslTo#{colorClass}Text"](settings[settings.mode].colors[settings[settings.mode].edit]))
     return
 
@@ -264,24 +267,28 @@ Meteor.startup () ->
 
     settings[mode].colors.push new d3.hsl(~~(Math.random() * 360), 0.5, if mode is 'code' then 0.8 else 0.5)
     settings[mode].edit = settings[mode].colors.length - 1
-    $newColor = $ "<div class='color'>
-        <div class='top'>
+    $newColor = $ """
+      <div class="color">
+        <div class="top">
         </div>
-        <div class='center'>
-          <div class='info'>
-            <span class='hex'/><br/>
-            <span class='rgb'/><br/>
-            <span class='hsl'/><br/>
-            <span class='hcl'/><br/>
-            <span class='lab'/><br/>
-            <span class='ctl'><b>1</b><b>2</b><b>3</b></span>
+        <div class="center">
+          <div class="info">
+            <div class="colorcodes">
+              <span class="hex"/><br/>
+              <span class="rgb"/><br/>
+              <span class="hsl"/><br/>
+              <span class="hcl"/><br/>
+              <span class="lab"/><br/>
+            </div>
+            <span class="ctl"><b>1</b><b>2</b><b>3</b></span>
             <b>a</b>
           </div>
         </div>
-        <div class='bottom'>
-          <span class='save'><a>y</a><a>z</a><a>A</a></span>
+        <div class="bottom">
+          <span class="save"><a>y</a><a>z</a><a>A</a></span>
         </div>
       </div>"
+    """
     $("section.#{mode} > .colors").append $newColor
     setColorWidths(0, mode)
     $newColor.mousemove hoverColor
