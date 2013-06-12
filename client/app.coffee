@@ -313,11 +313,52 @@ converter =
       # validate output
       converter.bounds.validate "lab", {l: l, a: a, b: b}
 
+  stringlify:
+    rgb:
+      r: {min: 0, max: 1}         # r ∊ [0, 1]    red
+      g: {min: 0, max: 1}         # g ∊ [0, 1]    green
+      b: {min: 0, max: 1}         # b ∊ [0, 1]    blue
+    hsl:
+      h: {min: 0, max: 1}         # h ∊ [0, 1[    hue
+      s: {min: 0, max: 1}         # s ∊ [0, 1]    saturation
+      l: {min: 0, max: 1}         # l ∊ [0, 1]    lightness
+    hsv:
+      h: {min: 0, max: 1}         # h ∊ [0, 1[    hue
+      s: {min: 0, max: 1}         # s ∊ [0, 1]    saturation
+      v: {min: 0, max: 1}         # v ∊ [0, 1]    value
+    cmy:
+      c: {min: 0, max: 1}         # c ∊ [0, 1[    cyan
+      m: {min: 0, max: 1}         # m ∊ [0, 1]    magenta
+      y: {min: 0, max: 1}         # y ∊ [0, 1]    yellow
+    cmyk:
+      c: {min: 0, max: 1}         # c ∊ [0, 1[    cyan
+      m: {min: 0, max: 1}         # m ∊ [0, 1]    magenta
+      y: {min: 0, max: 1}         # y ∊ [0, 1]    yellow
+      k: {min: 0, max: 1}         # k ∊ [0, 1]    key
+    XYZ:
+      X: {min: 0, max: 0.95047}   # X ∊ [0, 0.95047]
+      Y: {min: 0, max: 1.00000}   # Y ∊ [0, 1.00000]
+      Z: {min: 0, max: 1.08883}   # Z ∊ [0, 1.08883]
+    Yxy:
+      Y: {min: 0, max: 1}         # Y ∊ [0, 1]
+      x: {min: 0, max: 1}         # x ∊ [0, 1]
+      y: {min: 0, max: 1}         # y ∊ [0, 1]
+    lab:
+      l: {min: -999, max: 999}    # l ∊ [?, ?]
+      a: {min: -999, max: 999}    # a ∊ [?, ?]
+      b: {min: -999, max: 999}    # b ∊ [?, ?]
+
   convert: (srcType, targetType, values) ->
     converter.base["rgb-to-#{targetType}"](converter.base["#{srcType}-to-rgb"](values))
 
 
 Meteor.startup () ->
+  Meteor._reload.onMigrate () ->
+    if confirm("The application has been updated!\nPress OK to restart the application.\n(The current status will be lost)")
+      [true]
+    else
+      false
+
   settings =
     _colorMod: 96
     mode: 'code'
