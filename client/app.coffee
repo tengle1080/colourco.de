@@ -1,42 +1,45 @@
 converter =
   bounds:
     rgb:
-      r: {min: 0, max: 1}         # r ∊ [0, 1]    red
-      g: {min: 0, max: 1}         # g ∊ [0, 1]    green
-      b: {min: 0, max: 1}         # b ∊ [0, 1]    blue
+      r: {min: 0, max: 1, f: 255}       # r ∊ [0, 1]    red
+      g: {min: 0, max: 1, f: 255}       # g ∊ [0, 1]    green
+      b: {min: 0, max: 1, f: 255}       # b ∊ [0, 1]    blue
     hsl:
-      h: {min: 0, max: 1}         # h ∊ [0, 1[    hue
-      s: {min: 0, max: 1}         # s ∊ [0, 1]    saturation
-      l: {min: 0, max: 1}         # l ∊ [0, 1]    lightness
+      h: {min: 0, max: 1, f: 360}       # h ∊ [0, 1[    hue
+      s: {min: 0, max: 1, f: 100}       # s ∊ [0, 1]    saturation
+      l: {min: 0, max: 1, f: 100}       # l ∊ [0, 1]    lightness
     hsv:
-      h: {min: 0, max: 1}         # h ∊ [0, 1[    hue
-      s: {min: 0, max: 1}         # s ∊ [0, 1]    saturation
-      v: {min: 0, max: 1}         # v ∊ [0, 1]    value
+      h: {min: 0, max: 1, f: 360}       # h ∊ [0, 1[    hue
+      s: {min: 0, max: 1, f: 100}       # s ∊ [0, 1]    saturation
+      v: {min: 0, max: 1, f: 100}       # v ∊ [0, 1]    value
     cmy:
-      c: {min: 0, max: 1}         # c ∊ [0, 1[    cyan
-      m: {min: 0, max: 1}         # m ∊ [0, 1]    magenta
-      y: {min: 0, max: 1}         # y ∊ [0, 1]    yellow
+      c: {min: 0, max: 1, f: 100}       # c ∊ [0, 1[    cyan
+      m: {min: 0, max: 1, f: 100}       # m ∊ [0, 1]    magenta
+      y: {min: 0, max: 1, f: 100}       # y ∊ [0, 1]    yellow
     cmyk:
-      c: {min: 0, max: 1}         # c ∊ [0, 1[    cyan
-      m: {min: 0, max: 1}         # m ∊ [0, 1]    magenta
-      y: {min: 0, max: 1}         # y ∊ [0, 1]    yellow
-      k: {min: 0, max: 1}         # k ∊ [0, 1]    key
+      c: {min: 0, max: 1, f: 100}       # c ∊ [0, 1[    cyan
+      m: {min: 0, max: 1, f: 100}       # m ∊ [0, 1]    magenta
+      y: {min: 0, max: 1, f: 100}       # y ∊ [0, 1]    yellow
+      k: {min: 0, max: 1, f: 100}       # k ∊ [0, 1]    key
     XYZ:
-      X: {min: 0, max: 0.95047}   # X ∊ [0, 0.95047]
-      Y: {min: 0, max: 1.00000}   # Y ∊ [0, 1.00000]
-      Z: {min: 0, max: 1.08883}   # Z ∊ [0, 1.08883]
+      X: {min: 0, max: 0.95047, f: 100} # X ∊ [0, 0.95047]
+      Y: {min: 0, max: 1.00000, f: 100} # Y ∊ [0, 1.00000]
+      Z: {min: 0, max: 1.08883, f: 100} # Z ∊ [0, 1.08883]
     Yxy:
-      Y: {min: 0, max: 1}         # Y ∊ [0, 1]
-      x: {min: 0, max: 1}         # x ∊ [0, 1]
-      y: {min: 0, max: 1}         # y ∊ [0, 1]
+      Y: {min: 0, max: 1, f: 100}       # Y ∊ [0, 1]
+      x: {min: 0, max: 1, f: 100}       # x ∊ [0, 1]
+      y: {min: 0, max: 1, f: 100}       # y ∊ [0, 1]
     lab:
-      l: {min: -999, max: 999}    # l ∊ [?, ?]
-      a: {min: -999, max: 999}    # a ∊ [?, ?]
-      b: {min: -999, max: 999}    # b ∊ [?, ?]
-    validate: (type, values) ->
+      l: {min:  0, max: 1, f: 100}      # l ∊ [0, 1]
+      a: {min: -1, max: 1, f: 100}      # a ∊ [-1, 1]
+      b: {min: -1, max: 1, f: 100}      # b ∊ [-1, 1]
+    validate: (type, values, factorize = false) ->
       result = {}
-      for key, bounds of converter.bounds[type]
-        result[key] = Math.max(bounds.min, Math.min(bounds.max, values[key]))
+      for key, b of converter.bounds[type]
+        if factorize is on
+          result[key] = Math.max(b.min * b.f, Math.min(b.max * b.f, ~~(values[key] * b.f)))
+        else
+          result[key] = Math.max(b.min, Math.min(b.max, values[key]))
       result
 
   # ----------------------------------- #
@@ -49,6 +52,29 @@ converter =
     # ----------------- #
     #rgb -> rgb
     "rgb-to-rgb": (values) -> converter.bounds.validate "rgb", values # validate
+
+    # ----------------- #
+    # -- hex <-> rgb -- #
+    # ----------------- #
+    #hex -> rgb
+    "hex-to-rgb": (values) -> converter.bounds.validate "rgb", values # validate
+
+    #rgb -> hex
+    "rgb-to-hex": (values) -> converter.bounds.validate "rgb", values # validate
+
+    # ----------------- #
+    # -- rgb --> fgc -- #
+    # ----------------- #
+    #rgb -> fgc
+    "rgb-to-fgc": (values) ->
+      #fgc is a fore-ground-color matching to rgb
+      # validate input
+      # logic
+      rgb = converter.bounds.validate "rgb", values # validate
+      m = 96 / 255
+      m *= -1 if Math.max(rgb.r, rgb.g, rgb.b) > 1 - m
+      # validate output
+      converter.bounds.validate "rgb", {r: rgb.r + m, g: rgb.g + m, b: rgb.b + m}
 
     # ----------------- #
     # -- hsl <-> rgb -- #
@@ -314,488 +340,526 @@ converter =
       converter.bounds.validate "lab", {l: l, a: a, b: b}
 
   stringlify:
-    rgb:
-      r: {min: 0, max: 1}         # r ∊ [0, 1]    red
-      g: {min: 0, max: 1}         # g ∊ [0, 1]    green
-      b: {min: 0, max: 1}         # b ∊ [0, 1]    blue
-    hsl:
-      h: {min: 0, max: 1}         # h ∊ [0, 1[    hue
-      s: {min: 0, max: 1}         # s ∊ [0, 1]    saturation
-      l: {min: 0, max: 1}         # l ∊ [0, 1]    lightness
-    hsv:
-      h: {min: 0, max: 1}         # h ∊ [0, 1[    hue
-      s: {min: 0, max: 1}         # s ∊ [0, 1]    saturation
-      v: {min: 0, max: 1}         # v ∊ [0, 1]    value
-    cmy:
-      c: {min: 0, max: 1}         # c ∊ [0, 1[    cyan
-      m: {min: 0, max: 1}         # m ∊ [0, 1]    magenta
-      y: {min: 0, max: 1}         # y ∊ [0, 1]    yellow
-    cmyk:
-      c: {min: 0, max: 1}         # c ∊ [0, 1[    cyan
-      m: {min: 0, max: 1}         # m ∊ [0, 1]    magenta
-      y: {min: 0, max: 1}         # y ∊ [0, 1]    yellow
-      k: {min: 0, max: 1}         # k ∊ [0, 1]    key
-    XYZ:
-      X: {min: 0, max: 0.95047}   # X ∊ [0, 0.95047]
-      Y: {min: 0, max: 1.00000}   # Y ∊ [0, 1.00000]
-      Z: {min: 0, max: 1.08883}   # Z ∊ [0, 1.08883]
-    Yxy:
-      Y: {min: 0, max: 1}         # Y ∊ [0, 1]
-      x: {min: 0, max: 1}         # x ∊ [0, 1]
-      y: {min: 0, max: 1}         # y ∊ [0, 1]
-    lab:
-      l: {min: -999, max: 999}    # l ∊ [?, ?]
-      a: {min: -999, max: 999}    # a ∊ [?, ?]
-      b: {min: -999, max: 999}    # b ∊ [?, ?]
+    tags: (tag, str) ->
+      ot = ct = ""
+      ot = "<#{tag}>" if tag? and tag.length > 0
+      ct = "</#{tag}>" if tag? and tag.length > 0
+      str.replace(/\[/g, ot).replace(/\]/g, ct)
+    rgb: (values, tag = null) ->
+      rgb = converter.bounds.validate "rgb", values, true
+      converter.stringlify.tags tag, """
+        rgb([#{rgb.r}], [#{rgb.g}], [#{rgb.b}])
+      """
+    hex: (values, tag = null) ->
+      hex = converter.bounds.validate "rgb", values, true
+      r = hex.r.toString(16)
+      g = hex.g.toString(16)
+      b = hex.b.toString(16)
+      r = "0#{r}" if hex.r < 16
+      g = "0#{g}" if hex.g < 16
+      b = "0#{b}" if hex.b < 16
+      converter.stringlify.tags tag, """
+        #[#{r}][#{g}][#{b}]
+      """
+    fgc: (values, tag = null) ->
+      fgc = converter.bounds.validate "rgb", values, true
+      converter.stringlify.tags tag, """
+        rgb([#{fgc.r}], [#{fgc.g}], [#{fgc.b}])
+      """
+    hsl: (values, tag = null) ->
+      hsl = converter.bounds.validate "hsl", values, true
+      converter.stringlify.tags tag, """
+        hsl([#{hsl.h}], [#{hsl.s}]%, [#{hsl.l}]%)
+      """
+    hsv: (values, tag = null) ->
+      hsv = converter.bounds.validate "hsv", values, true
+      converter.stringlify.tags tag, """
+        hsv([#{hsv.h}], [#{hsv.s}]%, [#{hsv.v}]%)
+      """
+    cmy: (values, tag = null) ->
+      cmy = converter.bounds.validate "cmy", values, true
+      converter.stringlify.tags tag, """
+        cmy([#{cmy.c}], [#{cmy.m}], [#{cmy.y}])
+      """
+    cmyk: (values, tag = null) ->
+      cmyk = converter.bounds.validate "cmyk", values, true
+      converter.stringlify.tags tag, """
+        hsl([#{cmyk.c}], [#{cmyk.m}], [#{cmyk.y}], [#{cmyk.k}])
+      """
+    XYZ: (values, tag = null) ->
+      XYZ = converter.bounds.validate "XYZ", values, true
+      converter.stringlify.tags tag, """
+        XYZ([#{XYZ.X}], [#{XYZ.Y}], [#{XYZ.Z}])
+      """
+    Yxy: (values, tag = null) ->
+      Yxy = converter.bounds.validate "Yxy", values, true
+      converter.stringlify.tags tag, """
+        hsl([#{Yxy.Y}]%, [#{Yxy.x}]%, [#{Yxy.y}]%)
+      """
+    lab:(values, tag = null) ->
+      lab = converter.bounds.validate "lab", values, true
+      converter.stringlify.tags tag, """
+        hsl([#{lab.l}], [#{lab.a}], [#{lab.b}])
+      """
+
+  scheme:
+    "mono":
+      [
+        [
+          ratio: 1
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+      ]
+    "mono-dark":
+      [
+        [
+          ratio: 0.4
+          h: 
+            "mode": "fixed" # unable to change
+            origin: (value, seed) -> 0
+          s:
+            "mode": "fixed" # unable to change
+            origin: (value, seed) -> 0
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+        [
+          ratio: 0.6
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+      ]
+    "mono-light":
+      [
+        [
+          ratio: 0.6
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+        [
+          ratio: 0.4
+          h: 
+            "mode": "fixed" # unable to change
+            origin: (value, seed) -> 0
+          s:
+            "mode": "fixed" # unable to change
+            origin: (value, seed) -> 0
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+      ]
+    "analogic":
+      [
+        [
+          ratio: 1
+          h: 
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+          s:
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+      ]
+    "complement":
+      [
+        [
+          ratio: 0.4
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value + 0.5
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+        [
+          ratio: 0.6
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+      ]
+    "analogic-complement":
+      [
+        [
+          ratio: 0.4
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value + 0.5
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+        [
+          ratio: 0.6
+          h: 
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value
+        ]
+      ]
+    "triad":
+      [
+        [
+          ratio: 0.25
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value + 0.33
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+        [
+          ratio: 0.25
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value - 0.33
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+        [
+          ratio: 0.5
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+      ]
+    "quad":
+      [
+        [
+          ratio: 0.25
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value + 0.25
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+        [
+          ratio: 0.25
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value + 0.5
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+        [
+          ratio: 0.25
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value - 0.25
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+        [
+          ratio: 0.25
+          h: 
+            "mode": "global" # changes hue on all swatches on edit
+            origin: (value, seed) -> value
+          s:
+            "mode": "single" # changes value per swatch
+            origin: (value, seed) -> value + seed
+          l:
+            "mode": "uniform" # changes spread on all sawtches on edit
+            origin: (value, seed) -> value + seed
+        ]
+      ]
 
   convert: (srcType, targetType, values) ->
     converter.base["rgb-to-#{targetType}"](converter.base["#{srcType}-to-rgb"](values))
 
+Session.setDefault "colors", [{h: 0, s: 0.5, l: 0.5}]
+Session.setDefault "currentColor", {h: 0, s: 0.5, l: 0.5}
+Session.setDefault "currentMenu", "menu-none"
+Session.setDefault "schemeMode", "none"
+Session.setDefault "editActive", true
+Session.setDefault "displayColorType", "hex"
+
+Handlebars.registerHelper "foreach", (arr, options) ->
+  return options.inverse(@) if options.inverse and !arr.length
+  return arr.map((item, index) ->
+    item.$index = index
+    item.$first = index is 0
+    item.$last  = index is arr.length-1
+    return options.fn(item)
+  ).join('')
+
+Template.menu["menu-class"] = (name) -> if Session.equals("currentMenu", name) then "active" else ""
+
+Template.menu.rendered = () ->
+  $("[data-page]").click () ->
+    $this = $ @
+    pageIndex = $this.attr("data-page") * 1
+    if pageIndex is 1
+      schemeMode = $this.attr("data-page-name").replace("menu-","")
+      console.log schemeMode
+    Session.set "currentMenu", $this.attr("data-page-name")
+    return
+
+Template.scheme.preserve ["*"]
+Template.scheme.colors = () -> Session.get "colors"
+Template.scheme.currentColor = () -> Session.get "currentColor"
+Template.scheme.editActive = () -> Session.get "editActive"
+Template.scheme.colorName = (hsl) ->
+  dct = Session.get "displayColorType"
+  new Handlebars.SafeString converter.stringlify[dct](converter.convert("hsl", dct, hsl),"b")
+Template.scheme.colorBack = (hsl) -> converter.stringlify.rgb(converter.convert("hsl", "rgb", hsl))
+Template.scheme.colorFore = (hsl) -> converter.stringlify.fgc(converter.convert("hsl", "fgc", hsl))
+Template.scheme.linkLess = (hsl) ->
+  hex = converter.stringlify.hex(converter.convert("hsl", "hex", hsl)).substr(1)
+  "http://api.colourco.de/export/less/%23#{hex}"
+Template.scheme.linkImage = (hsl) ->
+  hex = converter.stringlify.hex(converter.convert("hsl", "hex", hsl)).substr(1)
+  "http://api.colourco.de/export/png/%23#{hex}"
+Template.scheme.events
+  "mousemove .edit": (e) ->
+    $swatch = $ e.srcElement
+    while not $swatch.hasClass "swatch"
+      $swatch = $swatch.parent()
+    offset = $swatch.offset()
+    h = (e.pageX - offset.left) / ~~($swatch.width() * 0.99)
+    l = (e.pageY - offset.top) / $swatch.height()
+    hsl = {h: h, s: 0.5, l: l}
+    Session.set "currentColor", hsl
+  "click .edit": (e) ->
+    colors = Session.get "colors"
+    colors.push Session.get "currentColor"
+    Session.set "colors", colors
+    Session.set "editActive", false
+  "click .add": (e) ->
+    Session.set "editActive", true
+  "click .icon-trash": (e) ->
+    $swatch = $ e.srcElement
+    while not $swatch.hasClass "swatch"
+      $swatch = $swatch.parent()
+    index = $swatch.attr "data-index"
+    colors = Session.get "colors"
+    colors.splice index, 1
+    Session.set "editActive", true if colors.length is 0
+    Session.set "colors", colors
+  "click .icon-left": (e) ->
+    $swatch = $ e.srcElement
+    while not $swatch.hasClass "swatch"
+      $swatch = $swatch.parent()
+    index = $swatch.attr "data-index"
+    colors = Session.get "colors"
+    color = colors.splice index, 1
+    colors.splice index - 1, 0, color[0]
+    Session.set "colors", colors
+  "click .icon-right": (e) ->
+    $swatch = $ e.srcElement
+    while not $swatch.hasClass "swatch"
+      $swatch = $swatch.parent()
+    index = $swatch.attr "data-index"
+    colors = Session.get "colors"
+    color = colors.splice index, 1
+    colors.splice index + 1, 0, color[0]
+    Session.set "colors", colors
+###Template.scheme.rendered = () ->
+  $(".edit").mousemove (e) ->
+    $this = $ @
+    parentOffset = $this.parent().offset()
+    h = (e.pageX - parentOffset.left) / ~~($this.width() * 0.99)
+    l = (e.pageY - parentOffset.top) / $this.height()
+    hsl = {h: h, s: 0.5, l: l}
+    Session.set "currentColor", hsl
+    return
+  $(".edit").click (e) ->
+    colors = Session.get "colors"
+    colors.push Session.get "currentColor"
+    Session.set "colors", colors
+    Session.set "editActive", false
+###
+###Template.scheme.rendered = () ->
+  isEditActive = Session.get "editActive"
+  colors = Session.get "savedColors"
+  colorCount = colors.length
+  colorCount += 1 if isEditActive
+  $(".page-scheme").addClass "page-current"
+  $swatches = $ ".swatches"
+  $scheme = $ ".scheme"
+  $scheme.addClass "count-#{colorCount}"
+  $scheme.addClass "add-swatch" if not isEditActive
+  for i in [0..colors.length]
+    hsl = colors[i] if i < colors.length
+    dct = Session.get "displayColorType"
+    rgb = converter.convert "hsl", "rgb", hsl
+    hex = converter.convert "hsl", "hex", hsl
+    fgc = converter.convert "hsl", "fgc", hsl
+    dc  = converter.convert "hsl",  dct , hsl
+    $swatch = $ """
+      <div class="swatch">
+        <div class="pos-t">
+          <span class="icon-trash"></span>
+        </div>
+        <div class="pos-tc">
+          <span class="icon-less"></span>
+          <span class="icon-image"></span>
+        </div>
+        <div class="pos-c">
+          #{converter.stringlify[dct] dc, "b"}
+        </div>
+        <div class="pos-bc">
+          <span class="icon-left"></span>
+          <span class="icon-right"></span>
+        </div>
+        <div class="pos-b">
+          <span class="icon-up"></span>
+        </div>
+      </div>
+    """
+    $swatch.css "background-color", converter.stringlify.rgb rgb
+    $swatch.css "color", converter.stringlify.fgc fgc
+    $swatches.append $swatch
+  $(".swatches > div:last-child").addClass "edit-active" if isEditActive
+  $(".edit-active").mousemove (e) ->
+    $this = $ @
+    dct = Session.get "displayColorType"
+    parentOffset = $this.parent().offset()
+    h = (e.pageX - parentOffset.left) / ~~($this.width() * 0.99)
+    l = (e.pageY - parentOffset.top) / $this.height()
+    hsl = {h: h, s: 0.5, l: l}
+    hex = converter.convert "hsl", "hex", hsl
+    fgc = converter.convert "hsl", "fgc", hsl
+    dc  = converter.convert "hsl",  dct , hsl
+    $this.data "hsl", hsl
+    $this.find(".pos-c").html converter.stringlify[dct](dc, "b")
+    $this.css "background-color", converter.stringlify.hex hex
+    $this.css "color", converter.stringlify.fgc fgc
+    return
+  $(".edit-active").click (e) ->
+    $this = $ @
+    colors = Session.get "savedColors"
+    colors.push $this.data("hsl")
+    console.log colors
+    Session.set "savedColors", colors
+  return
+###
 
 Meteor.startup () ->
-  Meteor._reload.onMigrate () ->
-    if confirm("The application has been updated!\nPress OK to restart the application.\n(The current status will be lost)")
-      [true]
-    else
-      false
+  $main = $ "#main"
+  $pages = $main.children "div.page"
+  isAnimating = false
+  endCurrPage = false
+  endNextPage = false
+  animationEvents = 'animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd'
+  current = 0
 
-  settings =
-    _colorMod: 96
-    mode: 'code'
-    scheme:
-      mode: 'mono'
-      colors: []
-      edit: -1;
-      locked: false
-      contrast: 2.0
-    code:
-      colors: []
-      edit: -1;
-      locked: false
-      activatedNew: true
+  $pages.each () ->
+    $page = $ @
+    $page.data "originalClassList", $page.attr("class")
 
-  d3.ihx = (hsl) -> #inverted hex
-    rgb = new d3.rgb hsl
-    mod = if Math.max(rgb.r, rgb.g, rgb.b) > 255 - settings._colorMod then -settings._colorMod else settings._colorMod
-    @r = Math.min(255, Math.max(0, rgb.r + mod))
-    @g = Math.min(255, Math.max(0, rgb.g + mod))
-    @b = Math.min(255, Math.max(0, rgb.b + mod))
-    @
+  $pages.eq(current).addClass("page-current")
 
-  d3.hex = (hsl) ->
-    strHex = hsl.toString()
-    @r = strHex.substr(1,2)
-    @g = strHex.substr(3,2)
-    @b = strHex.substr(5,2)
-    @
+  window.nextPage = (index) ->
+    return false if isAnimating
+    isAnimating = true;
+    $currPage = $pages.eq current
+    current = index
 
-  downloadURL = (url) ->
-    hiddenIFrameID = 'hiddenDownloader'
-    iframe = document.getElementById(hiddenIFrameID)
-    if (iframe is null)
-      iframe = document.createElement('iframe')
-      iframe.id = hiddenIFrameID
-      iframe.style.display = 'none'
-      document.body.appendChild(iframe)
-    iframe.src = url
-    return
+    $nextPage = $pages.eq(current)
+    return if $nextPage.hasClass "page-current"
+    $nextPage.addClass("page-current")
+    outClass = "page-rotateTopSideFirst"
+    inClass = "page-moveFromTop page-delay200 page-ontop"
 
-  window.hslToIhxText = (hsl) -> "rgb(#{(new d3.ihx(hsl)).r}, #{(new d3.ihx(hsl)).g}, #{(new d3.ihx(hsl)).b})"
-  window.hslToHexHtml = (hsl) -> "#<b>#{(new d3.hex(hsl)).r}</b><b>#{(new d3.hex(hsl)).g}</b><b>#{(new d3.hex(hsl)).b}</b>"
-  window.hslToHexText = (hsl) -> "##{(new d3.hex(hsl)).r}#{(new d3.hex(hsl)).g}#{(new d3.hex(hsl)).b}"
-  window.hslToHslHtml = (hsl) -> "hsl(<b>#{~~hsl.h}</b>, <b>#{(hsl.s * 100).toFixed(0)}</b>%, <b>#{(hsl.l * 100).toFixed(0)}</b>%)"
-  window.hslToHslText = (hsl) -> "hsl(#{~~hsl.h}, #{(hsl.s * 100).toFixed(0)}%, #{(hsl.l * 100).toFixed(0)}%)"
-  window.hslToHclHtml = (hsl) -> "hcl(<b>#{~~((new d3.hcl(hsl)).h + 360) % 360}</b>, <b>#{(new d3.hcl(hsl)).c.toFixed(0)}</b>%, <b>#{(new d3.hcl(hsl)).l.toFixed(0)}</b>%)"
-  window.hslToHclText = (hsl) -> "hcl(#{~~((new d3.hcl(hsl)).h + 360) % 360}, #{(new d3.hcl(hsl)).c.toFixed(0)}%, #{(new d3.hcl(hsl)).l.toFixed(0)}%)"
-  window.hslToRgbHtml = (hsl) -> "rgb(<b>#{(new d3.rgb(hsl)).r}</b>, <b>#{(new d3.rgb(hsl)).g}</b>, <b>#{(new d3.rgb(hsl)).b}</b>)"
-  window.hslToRgbText = (hsl) -> "rgb(#{(new d3.rgb(hsl)).r}, #{(new d3.rgb(hsl)).g}, #{(new d3.rgb(hsl)).b})"
-  window.hslToLabHtml = (hsl) -> "lab(<b>#{(new d3.lab(hsl)).l.toFixed(0)}</b>, <b>#{(new d3.lab(hsl)).a.toFixed(0)}</b>, <b>#{(new d3.lab(hsl)).b.toFixed(0)}</b>)"
-  window.hslToLabText = (hsl) -> "lab(#{(new d3.lab(hsl)).l.toFixed(0)}, #{(new d3.lab(hsl)).a.toFixed(0)}, #{(new d3.lab(hsl)).b.toFixed(0)})"
+    $currPage.addClass(outClass).on animationEvents, () ->
+      $currPage.off(animationEvents)
+      endCurrPage = true
+      onEndAnimation($currPage, $nextPage) if endNextPage
 
-  applySettings = (_settings) ->
-    $.extend(settings, _settings)
-    return
-
-  draw = (index = settings[settings.mode].edit, mode = settings.mode) ->
-    settings[mode].colors[index].h = Math.max(0, Math.min(360, settings[mode].colors[index].h))
-    settings[mode].colors[index].s = Math.max(0, Math.min(1, settings[mode].colors[index].s))
-    settings[mode].colors[index].l = Math.max(0, Math.min(1, settings[mode].colors[index].l))
-    hsl = settings[mode].colors[index]
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .hex").html hslToHexHtml(hsl)
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .rgb").html hslToRgbHtml(hsl)
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .hsl").html hslToHslHtml(hsl)
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .hcl").html hslToHclHtml(hsl)
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .lab").html hslToLabHtml(hsl)
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1})").css 'background-color', hslToHexText(hsl)
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .info > span").css 'background-color', hslToHexText(hsl)
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1})").css 'color', hslToIhxText(hsl)
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .save a").css 'color', hslToIhxText(hsl)
-    $(".front > .icon").css 'color', hslToIhxText(hsl) if index is 0
-    strColor = ''
-    if settings.mode is 'code'
-      strColor = hslToHexText(hsl)
-      colors = (hslToHexText color for color in settings[settings.mode].colors)
-      colors.pop() if settings[settings.mode].locked is false
-      if colors.length > 0
-        $('.front > .icon.save').show()
-        strColors = colors.join(',')
-        $(".front > .icon.save.less").attr 'href', "http://api.colourco.de/export/less/#{encodeURIComponent(strColors)}"
-        $(".front > .icon.save.image").attr 'href', "http://api.colourco.de/export/png/#{encodeURIComponent(strColors)}"
-      else
-        $('.front > .icon.save').hide()
-    else
-      colors = (hslToHexText color for color in settings[settings.mode].colors)
-      strColor = colors.join(',')
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .save a:nth-child(2)").attr 'href', "http://api.colourco.de/export/less/#{encodeURIComponent(strColor)}"
-    $("section.#{mode} > .colors > div:nth-child(#{index + 1}) .save a:nth-child(3)").attr 'href', "http://api.colourco.de/export/png/#{encodeURIComponent(strColor)}"
-    if settings[mode].locked is false and index is settings[mode].edit
-      colorClass = $('nav .convert input[type=radio]:checked').val()
-      $('nav input[type=text]').val(window["hslTo#{colorClass}Text"](hsl))
-      $("section.#{mode} .locked").removeClass('locked')
-    else if settings[mode].locked is true
-      $("section.#{mode} > .colors > .color").addClass('locked')
-    return
-
-  hoverColor = (e, mode = settings.mode) ->
-    if settings[mode].locked is false
-      maxX = $('.color').width() * 0.99
-      maxY = $('.color').height() * 0.99
-      x = e.pageX - 2 - settings[mode].edit * maxX
-      y = e.pageY
-      settings[mode].colors[settings[mode].edit] = new d3.hsl ~~(x / maxX * 360), settings[mode].colors[settings[mode].edit].s, ~~(y / maxY * 100) / 100
-      draw()
-    return
-
-  setColorWidths = (offset = 0, mode = settings.mode) ->
-    $("section.#{mode} > .colors > div").css 'width', (100 / (settings[mode].colors.length + offset)) + '%'
-    $("section.#{mode} > .colors > div > div").css 'width', (100 / (settings[mode].colors.length + offset)) + '%'
-
-  setColors = (mode = settings.mode) ->
-    if mode is 'scheme'
-      h = settings.scheme.colors[2].h
-      s = settings.scheme.colors[2].s
-      l = settings.scheme.colors[2].l
-      switch settings.scheme.mode
-        when 'mono'
-          settings.scheme.colors[0] = new d3.hsl h,s * 0.8, l * (1 - 0.2 * settings.scheme.contrast)
-          settings.scheme.colors[1] = new d3.hsl h,s * 0.9, l * (1 - 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[3] = new d3.hsl h,s * 1.1, l * (1 + 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[4] = new d3.hsl h,s * 1.2, l * (1 + 0.2 * settings.scheme.contrast)
-        when 'mono-d'
-          settings.scheme.colors[0] = new d3.hsl h,0, l * (1 - 0.2 * settings.scheme.contrast)
-          settings.scheme.colors[1] = new d3.hsl h,0, l * (1 - 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[3] = new d3.hsl h,s * 1.1, l * (1 + 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[4] = new d3.hsl h,s * 1.2, l * (1 + 0.2 * settings.scheme.contrast)
-        when 'mono-l'
-          settings.scheme.colors[0] = new d3.hsl h,s * 0.8, l * (1 - 0.2 * settings.scheme.contrast)
-          settings.scheme.colors[1] = new d3.hsl h,s * 0.9, l * (1 - 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[3] = new d3.hsl h,0, l * (1 + 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[4] = new d3.hsl h,0, l * (1 + 0.2 * settings.scheme.contrast)
-        when 'comp'
-          settings.scheme.colors[0] = new d3.hsl (h + 180) % 360,s * 0.8, l * (1 - 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[1] = new d3.hsl (h + 180) % 360,s * 1.2, l * (1 + 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[3] = new d3.hsl h,s * 1.2, l * (1 + 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[4] = new d3.hsl h,s * 0.8, l * (1 - 0.1 * settings.scheme.contrast)
-        when 'tri'
-          settings.scheme.colors[0] = new d3.hsl (h + 160 - 10 * settings.scheme.contrast) % 360,s, l
-          settings.scheme.colors[1] = new d3.hsl (h + 200 + 10 * settings.scheme.contrast) % 360,s, l
-          settings.scheme.colors[3] = new d3.hsl h,s * 1.2, l * (1 + 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[4] = new d3.hsl h,s * 0.8, l * (1 - 0.1 * settings.scheme.contrast)
-        when 'quad'
-          settings.scheme.colors[0] = new d3.hsl (h + 180) % 360,s, l
-          settings.scheme.colors[1] = new d3.hsl (h + 220 + 10 * settings.scheme.contrast) % 360,s, l
-          settings.scheme.colors[3] = new d3.hsl h,s * 1.2, l * (1 + 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[4] = new d3.hsl (h + 40 + 10 * settings.scheme.contrast) % 360,s, l
-        when 'ana'
-          settings.scheme.colors[0] = new d3.hsl (h + 360 - 30 * settings.scheme.contrast) % 360, s, l * 1.1
-          settings.scheme.colors[1] = new d3.hsl (h + 360 - 15 * settings.scheme.contrast) % 360, s, l
-          settings.scheme.colors[3] = new d3.hsl (h + 15 * settings.scheme.contrast) % 360, s, l
-          settings.scheme.colors[4] = new d3.hsl (h + 30 * settings.scheme.contrast) % 360, s, l * 1.1
-        when 'ana-c'
-          settings.scheme.colors[0] = new d3.hsl (h + 180) % 360,s * 0.8, l * (1 - 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[1] = new d3.hsl (h + 180) % 360,s * 1.2, l * (1 + 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[3] = new d3.hsl (h + 330) % 360,s * 1.2, l * (1 + 0.1 * settings.scheme.contrast)
-          settings.scheme.colors[4] = new d3.hsl (h + 30) % 360,s * 1.2, l * (1 + 0.1 * settings.scheme.contrast)
-    for color, index in settings[mode].colors
-      draw index, mode
-
-
-  getColorIndex = (node, mode = settings.mode) ->
-    $colors = $("section.#{mode} > .colors > div")
-    for color, index in $colors
-      return index if color is node
-    -1
-
-  removeColor = () ->
-    $root = $(this).parent().parent().parent().parent()
-    index = getColorIndex($root[0])
-    if index >= 0
-      $root.children().css 'opacity', '0'
-      setColorWidths(-1)
-      $root.css 'width', '0%'
-      setTimeout(() ->
-        settings[settings.mode].colors.splice(index,1)
-        settings[settings.mode].edit-- if settings[settings.mode].edit > index
-        if settings[settings.mode].colors.length > 5
-          $("section.#{settings.mode} > .colors > div").css("box-shadow","0 -1px 0 hsl(0, 0%, 60%) inset, 0 1px 0 hsl(0, 0%, 60%) inset")
-        else
-          $("section.#{settings.mode} > .colors > div").css("box-shadow", "")
-        $root.remove()
-        setColors()
-        return
-      , 500)
-    return
-
-  swapColor = (node, count, mode = settings.mode) ->
-    $root = $(node).parent().parent().parent().parent()
-    index = getColorIndex($root[0])
-    if index >= 0 and index + count >= 0 and index + count < settings[mode].colors.length
-      tmp = settings[mode].colors[index]
-      settings[mode].colors[index] = settings[mode].colors[index + count]
-      settings[mode].colors[index + count] = tmp
-      setColors()
-    return
+    $nextPage.addClass(inClass).on animationEvents, () ->
+      $nextPage.off animationEvents
+      endNextPage = true
+      onEndAnimation($currPage, $nextPage) if endCurrPage
 
   wheelEvent = (e) ->
-    mode = settings.mode
-    if settings[mode].locked is false
-      delta = if (e.wheelDelta || e.detail || e.originalEvent.wheelDelta || e.originalEvent.detail) > 0 then 1 else -1
-      if mode is 'code'
-        color = settings[mode].colors[settings[mode].edit]
-        settings[mode].colors[settings[mode].edit] = new d3.hsl color.h, Math.max(0, Math.min(1, color.s + delta * .05)), color.l
-        draw()
-      else if mode is 'scheme'
-        settings.scheme.contrast = Math.min(3, Math.max(1, settings.scheme.contrast + delta * 0.1))
-        setColors()
-    return
+    delta = if (e.wheelDelta || e.detail || e.originalEvent.wheelDelta || e.originalEvent.detail) > 0 then 0.01 else -0.01
+    hsl = Session.get "currentColor"
+    hsl.s = Math.max(0, Math.min(1, hsl.s + delta))
+    Session.set "currentColor", hsl
 
-  $('body').bind "mousewheel", wheelEvent
-  $('body').bind "DOMMouseScroll", wheelEvent
+  $("body").bind "mousewheel", wheelEvent
+  $("body").bind "DOMMouseScroll", wheelEvent
 
-  $('nav .convert input[type=radio]').change () ->
-    colorClass = $('nav .convert input[type=radio]:checked').val()
-    $(".flipper").removeClass("hex").removeClass("rgb").removeClass("hsl")
-    $(".flipper").addClass(colorClass.toLowerCase())
-    $('nav input[type=text]').val(window["hslTo#{colorClass}Text"](settings[settings.mode].colors[settings[settings.mode].edit]))
-    return
+  onEndAnimation = ($outpage, $inpage ) ->
+    endCurrPage = false
+    endNextPage = false
+    resetPage $outpage, $inpage
+    isAnimating = false
 
-  $('nav .logo input[type=radio]').change () ->
-    tmpMode = $('nav .logo input[type=radio]:checked').val()
-    if tmpMode isnt settings.mode
-      $('body > div').removeClass(settings.mode)
-      settings.mode = $('nav .logo input[type=radio]:checked').val()
-      $('body > div').addClass(settings.mode)
-      if settings.mode is 'code'
-        $('.front > .icon.save').show()
-        $('nav .mode input[type=radio]:checked').attr('checked', null)
-      else if settings.mode is 'scheme'
-        $('.front > .icon.save').hide()
-        $("nav .mode #scheme-#{settings.scheme.mode}").click()
-      $('nav .logo a.long').html "colour#{settings.mode}"
-      $('section.hide').removeClass('hide')
-      $('section.show').addClass('hide').removeClass('show')
-      $("section.#{settings.mode}").addClass('show')
-      $('section.firstrun').removeClass('firstrun')
-    return
+  resetPage = ($outpage, $inpage) ->
+    $outpage.attr 'class', $outpage.data('originalClassList')
+    $inpage.attr 'class', $inpage.data('originalClassList') + ' page-current'
 
-  $('nav .mode input[type=radio]').change () ->
-    settings.scheme.mode = $('nav .mode input[type=radio]:checked').val()
-    if $('nav .logo input[type=radio]:checked').val() isnt 'scheme'
-      $('nav .logo #mode-scheme').click()
-    setColors()
-    return
+  setTimeout () ->
+    window.nextPage current + 1
+  , 250
 
-  $('nav input').keyup () ->
-    if settings[settings.mode].edit >= 0 and settings[settings.mode].edit < settings[settings.mode].colors.length
-      settings[settings.mode].colors[settings[settings.mode].edit] = new d3.hsl $(this).val()
-      settings[settings.mode].locked = true
-      if settings.mode is 'code'
-        draw()
-      else if settings.mode is 'scheme'
-        setColors()
-    return
-
-  addColor = (e, mode = settings.mode) ->
-    $("section.#{mode} > .colors > .color").removeClass('color').unbind()
-    $("section.#{mode} > .colors > div:nth-child(#{settings[mode].edit + 1}) .ctl > b:nth-child(2)").click removeColor
-    $("section.#{mode} > .colors > div:nth-child(#{settings[mode].edit + 1}) .ctl > b:nth-child(1)").click () ->
-      swapColor this, -1
-      return
-    $("section.#{mode} > .colors > div:nth-child(#{settings[mode].edit + 1}) .ctl > b:nth-child(3)").click () ->
-      swapColor this, 1
-      return
-
-    settings[mode].colors.push new d3.hsl(~~(Math.random() * 360), 0.5, if mode is 'code' then 0.8 else 0.5)
-    settings[mode].edit = settings[mode].colors.length - 1
-    $newColor = $ """
-      <div class="color">
-        <div class="top">
-        </div>
-        <div class="center">
-          <div class="info">
-            <div class="colorcodes">
-              <span class="hex"/><br/>
-              <span class="rgb"/><br/>
-              <span class="hsl"/><br/>
-              <span class="hcl"/><br/>
-              <span class="lab"/><br/>
-            </div>
-            <span class="ctl"><b>1</b><b>2</b><b>3</b></span>
-            <b>a</b>
-          </div>
-        </div>
-        <div class="bottom">
-          <span class="save"><a>y</a><a>z</a><a>A</a></span>
-        </div>
-      </div>"
-    """
-    $("section.#{mode} > .colors").append $newColor
-    setColorWidths(0, mode)
-    $newColor.mousemove hoverColor
-    $newColor.find(".save > a").click (args) ->
-      downloadURL $(@).attr 'href'
-      return false
-
-    $newColor.find('.info > b').click (e) ->
-      settings[mode].locked = false;
-      draw()
-      return false
-    $newColor.find('.info > b').mouseenter () ->
-      $(this).html 'b'
-      return
-    $newColor.find('.info > b').mouseleave () ->
-      $(this).html 'a'
-      return
-    $newColor.click () ->
-      addColor()
-      return
-    $newColor.bind 'contextmenu', () ->
-      settings[mode].locked = not settings[mode].locked
-      draw()
-      return false
-    settings[mode].locked = false
-    draw(settings[mode].edit, mode)
-    return
-
-  showBack = (elemClass, mode = settings.mode) ->
-    $('.flipper > .back').css 'visibility', 'visible'
-    $('.flip-modal > div').hide()
-    $(".flip-modal > .#{elemClass}.#{mode}, .flip-modal > .right").show()
-    settings[mode].locked = true
-    draw()
-    $('.flipper').addClass('hover')
-    $(".flipper, nav + span.icon").removeClass("menu")
-    return
-
-  $('nav .legal').click () ->
-    showBack 'legal'
-    return
-
-  $('nav .help').click () ->
-    showBack 'help'
-    return
-
-  $('.flipper > .back button').click () ->
-    $('.flipper').removeClass('hover')
-    return
-
-  $("nav + span.icon").click () ->
-    $(".flipper, nav + span.icon").addClass("menu")
-
-  $("nav").mouseleave () ->
-    $(".flipper, nav + span.icon").removeClass("menu")
-
-  $(window).keydown (e) ->
-    if e.ctrlKey
-      e.preventDefault() if (e.which >= 48 and e.which <= 57) or (e.which >= 37 and e.which <= 40)
-      $('body > div').addClass('show-shortcuts') if e.which is 17
-      $('body > div').addClass('shift') if e.which is 16
-      switch e.which
-        when 48 then $('label[for=mode-code]'    ).click() #0
-        when 49 then $('label[for=scheme-mono]'  ).click() #1
-        when 50 then $('label[for=scheme-mono-d]').click() #2
-        when 51 then $('label[for=scheme-mono-l]').click() #3
-        when 52 then $('label[for=scheme-ana]'   ).click() #4
-        when 53 then $('label[for=scheme-comp]'  ).click() #5
-        when 54 then $('label[for=scheme-ana-c]' ).click() #6
-        when 55 then $('label[for=scheme-tri]'   ).click() #7
-        when 56 then $('label[for=scheme-quad]'  ).click() #8
-        when 37, 38, 39, 40
-          if settings[settings.mode].edit >= 0 and settings[settings.mode].edit < settings[settings.mode].colors.length
-            settings[settings.mode].locked = true
-            switch e.which
-              when 37 #<
-                settings[settings.mode].colors[settings[settings.mode].edit].h = (settings[settings.mode].colors[settings[settings.mode].edit].h + 360 - 1) % 360
-              when 39 #>
-                settings[settings.mode].colors[settings[settings.mode].edit].h = (settings[settings.mode].colors[settings[settings.mode].edit].h + 360 + 1) % 360
-              when 38, 40
-                if e.shiftKey
-                  if settings.mode is 'code'
-                    if e.which is 38 #^
-                      settings.code.colors[settings.code.edit].s += 0.01
-                    else             #v
-                      settings.code.colors[settings.code.edit].s -= 0.01
-                  else
-                    if e.which is 38 #^
-                      settings.scheme.contrast = Math.min(3, Math.max(1, settings.scheme.contrast + 0.1))
-                    else             #v
-                      settings.scheme.contrast = Math.min(3, Math.max(1, settings.scheme.contrast - 0.1))
-                else
-                  if e.which is 38 #^
-                    settings[settings.mode].colors[settings[settings.mode].edit].l += 0.01
-                  else             #v
-                    settings[settings.mode].colors[settings[settings.mode].edit].l -= 0.01
-            setColors()
-    return #false
-
-  $(window).keyup (e) ->
-    e.preventDefault()
-    $('body > div').removeClass('show-shortcuts')
-    $('body > div').removeClass('shift')
-    return false
-
-  init = () ->
-    addColor()
-    addColor(null, 'scheme')
-    addColor(null, 'scheme')
-    addColor(null, 'scheme')
-    addColor(null, 'scheme')
-    addColor(null, 'scheme')
-    settings.scheme.edit = 2
-    $('nav .mode input[type=radio]:checked').attr('checked', null)
-    $('nav .logo input[type=radio]:checked').attr('checked', null)
-    $('nav .logo #mode-code').click()
-    $('section.scheme .color').removeClass('color')
-    $('section.scheme > .colors > div:nth-child(3)').addClass('color')
-    $("section.scheme > .colors > div").unbind()
-    setColors('scheme')
-    $('section.scheme').click () ->
-      settings.scheme.locked = true
-      draw()
-      return false
-    $('section.scheme').mousemove (e) ->
-      if settings.scheme.locked is false
-        maxX = $('section.scheme').width() * 0.99
-        maxY = $('section.scheme').height() * 0.99
-        x = e.pageX
-        y = e.pageY
-        settings.scheme.colors[2] = new d3.hsl ~~(x / maxX * 360), 0.5, (~~(y / maxY * 100) / 100 + 0.15) * 0.7
-        setColors()
-      return
-    setColors()
-
-  init()
-
-Template.analytics.rendered = ->
-  if !window._gaq?
-    window._gaq = []
-    _gaq.push(['_setAccount', 'UA-29865051-1'])
-    _gaq.push(['_setDomainName', 'colourco.de'])
-    _gaq.push(['_trackPageview'])
-
-    (->
-      ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      gajs = '.google-analytics.com/ga.js'
-      ga.src = if 'https:' is document.location.protocol then 'https://ssl'+gajs else 'http://www'+gajs
-      s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s)
-    )()

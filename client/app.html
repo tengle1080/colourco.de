@@ -4,7 +4,7 @@
   <meta name="description" content="colourco.de is an online designer tool, which allows you to easily and intuitively combine colours.">
   <meta name="keywords" content="color, colour, scheme, colorscheme, colourscheme, design, designer, palette, colourset, colorset, webcolours, webcolors, web, blind, live, preview, zaku, colorpicker">
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
-  <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet" type="text/css">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <link rel="apple-touch-icon" href="apple-touch-icon-precomposed.png" />
   <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-precomposed.png" />
@@ -21,278 +21,286 @@
   <script>if (/*@cc_on!@*/false) { document.documentElement.className += ' ie'; }</script>
 </head>
 <body>
-  <div class="flipper code hex">
-    <div class="front">
-      {{> menu}}
-      <span class="icon">C</span>
-      <a title="save scheme as image" class="icon save image" style="display: none;">A</a>
-      <a title="save scheme as less" class="icon save less" style="display: none;">z</a>
-      <section class="code show firstrun">
-        <div class="colors"></div>
-      </section>
-      <section class="scheme">
-        <div class="colors"></div>
-      </section>
-    </div>
-    <div class="back">
-      <div class="flip-modal">
-        <div class="legal code scheme">
-          <h2>
-            <label for="legal">legal</label></h2>
-          <input type="radio" name="legal" id="legal" value="legal" checked />
-          <div>
-            <h4>Contentwise responsible person in accordance with §5 TMG</h4>
-            <p>
-              <a href="http://zaku.eu" target="_blank">Zaku.eu</a> - Tamino Martinius<br />
-              Lehdenstraße 21<br />
-              DE 06847 Dessau-Roßlau<br />
-              mail: <a href="mailto:">info@zaku.eu</a><br />
-              phone: +49 1577 3752563<br />
-              USt-IdNr.: DE284757237
-            </p>
-          </div>
-          <h2>
-            <label for="design">Website, Layout &amp; Design, SQL-Database application</label></h2>
-          <input type="radio" name="legal" id="design" value="design" />
-          <div>
-            <h4>Website, Layout &amp; Design, SQL-Database application</h4>
-            <p>
-              Zaku.eu - Tamino Martinius<br />
-              Lehdenstraße 21<br />
-              DE 06847 Dessau-Roßlau
-            </p>
-            <h4>Design</h4>
-            <p>
-              Andreas Storm<br />
-              B.-Kellermann-Str. 6<br />
-              DE 06366 Köthen
-            </p>
-          </div>
-          <h2>
-            <label for="bibliography">bibliography</label></h2>
-          <input type="radio" name="legal" id="bibliography" value="bibliography" />
-          <div>
-            <h4>Fonts</h4>
-            <p>
-              <a href="http://icomoon.io" target="_blank">IcoMoon</a> - <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a><br />
-              <a href="http://www.webhostinghub.com/" target="_blank">WebHostingHub</a> - <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>
-            </p>
-            <h4>Legal</h4>
-            <p>
-              <a href="http://www.e-recht24.de/impressum-generator.html" target="_blank">Impressum-Generator</a> von eRecht24.
-            </p>
-            <h4>Disclaimer</h4>
-            <p>
-              Allgemein: <a href="http://www.e-recht24.de/muster-disclaimer.htm" target="_blank">Disclaimer</a> von eRecht24.<br />
-              Facebook: <a href="http://www.e-recht24.de/artikel/datenschutz/6590-facebook-like-button-datenschutz-disclaimer.html" target="_blank">Facebook Disclaimer</a> von eRecht24.<br />
-              Google: <a href="http://www.google.com/intl/de_ALL/analytics/tos.html" target="_blank">Google Analytics Bedingungen</a><br />
-              Google: <a href="http://www.google.com/intl/de/+/policy/+1button.html" target="_blank">Datenschutzerklärung für Google +1</a><br />
-              Twitter: <a href="http://twitter.com/privacy" target="_blank">Twitter Disclaimer</a>
-            </p>
-          </div>
-          <h2>
-            <label for="disclaimer">disclaimer</label></h2>
-          <input type="radio" name="legal" id="disclaimer" value="disclaimer" />
-          <div>
-            <h4>Haftung für Inhalte</h4>
-            <p>Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
-            <h4>Haftung für Links</h4>
-            <p>Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
-            <h4>Urheberrecht</h4>
-            <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</p>
-          </div>
-          <h2>
-            <label for="privacy">privacy</label></h2>
-          <input type="radio" name="legal" id="privacy" value="privacy" />
-          <div>
-            <h4>Privacy</h4>
-            <p>
-              Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder eMail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.
-            </p>
-            <p>
-              Wir weisen darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.
-            </p>
-            <p>
-              Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.
-            </p>
-            <h4>Datenschutzerklärung für die Nutzung von Facebook-Plugins (Like-Button)</h4>
-            <p>
-              Auf unseren Seiten sind Plugins des sozialen Netzwerks Facebook, 1601 South California Avenue, Palo Alto, CA 94304, USA integriert. Die Facebook-Plugins erkennen Sie an dem Facebook-Logo oder dem "Like-Button" ("Gefällt mir") auf unserer Seite. Eine Übersicht über die Facebook-Plugins finden Sie hier: <a href="http://developers.facebook.com/docs/plugins/" target="_blank">http://developers.facebook.com/docs/plugins/</a>.<br />
-              Wenn Sie unsere Seiten besuchen, wird über das Plugin eine direkte Verbindung zwischen Ihrem Browser und dem Facebook-Server hergestellt. Facebook erhält dadurch die Information, dass Sie mit Ihrer IP-Adresse unsere Seite besucht haben. Wenn Sie den Facebook "Like-Button" anklicken während Sie in Ihrem Facebook-Account eingeloggt sind, können Sie die Inhalte unserer Seiten auf Ihrem Facebook-Profil verlinken. Dadurch kann Facebook den Besuch unserer Seiten Ihrem Benutzerkonto zuordnen. Wir weisen darauf hin, dass wir als Anbieter der Seiten keine Kenntnis vom Inhalt der übermittelten Daten sowie deren Nutzung durch Facebook erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerklärung von facebook unter <a href="http://de-de.facebook.com/policy.php" target="_blank">http://de-de.facebook.com/policy.php</a>
-            </p>
-            <p>
-              Wenn Sie nicht wünschen, dass Facebook den Besuch unserer Seiten Ihrem Facebook-Nutzerkonto zuordnen kann, loggen Sie sich bitte aus Ihrem Facebook-Benutzerkonto aus.
-            </p>
-            <h4>Datenschutzerklärung für die Nutzung von Google Analytics</h4>
-            <p>
-              Diese Website benutzt Google Analytics, einen Webanalysedienst der Google Inc. ("Google"). Google Analytics verwendet sog. "Cookies", Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie ermöglichen. Die durch den Cookie erzeugten Informationen über Ihre Benutzung dieser Website werden in der Regel an einen Server von Google in den USA übertragen und dort gespeichert. Im Falle der Aktivierung der IP-Anonymisierung auf dieser Webseite wird Ihre IP-Adresse von Google jedoch innerhalb von Mitgliedstaaten der Europäischen Union oder in anderen Vertragsstaaten des Abkommens über den Europäischen Wirtschaftsraum zuvor gekürzt.
-            </p>
-            <p>
-              Nur in Ausnahmefällen wird die volle IP-Adresse an einen Server von Google in den USA übertragen und dort gekürzt. Im Auftrag des Betreibers dieser Website wird Google diese Informationen benutzen, um Ihre Nutzung der Website auszuwerten, um Reports über die Websiteaktivitäten zusammenzustellen und um weitere mit der Websitenutzung und der Internetnutzung verbundene Dienstleistungen gegenüber dem Websitebetreiber zu erbringen. Die im Rahmen von Google Analytics von Ihrem Browser übermittelte IP-Adresse wird nicht mit anderen Daten von Google zusammengeführt.
-            </p>
-            <p>
-              Sie können die Speicherung der Cookies durch eine entsprechende Einstellung Ihrer Browser-Software verhindern; wir weisen Sie jedoch darauf hin, dass Sie in diesem Fall gegebenenfalls nicht sämtliche Funktionen dieser Website vollumfänglich werden nutzen können. Sie können darüber hinaus die Erfassung der durch das Cookie erzeugten und auf Ihre Nutzung der Website bezogenen Daten (inkl. Ihrer IP-Adresse) an Google sowie die Verarbeitung dieser Daten durch Google verhindern, indem sie das unter dem folgenden Link verfügbare Browser-Plugin herunterladen und installieren: <a href="http://tools.google.com/dlpage/gaoptout?hl=de">http://tools.google.com/dlpage/gaoptout?hl=de</a>.
-            </p>
-            <h4>Datenschutzerklärung für die Nutzung von Google Adsense</h4>
-            <p>
-              Diese Website benutzt Google AdSense, einen Dienst zum Einbinden von Werbeanzeigen der Google Inc. ("Google"). Google AdSense verwendet sog. "Cookies", Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website ermöglicht. Google AdSense verwendet auch so genannte Web Beacons (unsichtbare Grafiken). Durch diese Web Beacons können Informationen wie der Besucherverkehr auf diesen Seiten ausgewertet werden.
-            </p>
-            <p>
-              Die durch Cookies und Web Beacons erzeugten Informationen über die Benutzung dieser Website (einschließlich Ihrer IP-Adresse) und Auslieferung von Werbeformaten werden an einen Server von Google in den USA übertragen und dort gespeichert. Diese Informationen können von Google an Vertragspartner von Google weiter gegeben werden. Google wird Ihre IP-Adresse jedoch nicht mit anderen von Ihnen gespeicherten Daten zusammenführen.
-            </p>
-            <p>
-              Sie können die Installation der Cookies durch eine entsprechende Einstellung Ihrer Browser Software verhindern; wir weisen Sie jedoch darauf hin, dass Sie in diesem Fall gegebenenfalls nicht sämtliche Funktionen dieser Website voll umfänglich nutzen können. Durch die Nutzung dieser Website erklären Sie sich mit der Bearbeitung der über Sie erhobenen Daten durch Google in der zuvor beschriebenen Art und Weise und zu dem zuvor benannten Zweck einverstanden.
-            </p>
-            <h4>Datenschutzerklärung für die Nutzung von Google +1</h4>
-            <p>
-              Erfassung und Weitergabe von Informationen:<br />
-              Mithilfe der Google +1-Schaltfläche können Sie Informationen weltweit veröffentlichen. über die Google +1-Schaltfläche erhalten Sie und andere Nutzer personalisierte Inhalte von Google und unseren Partnern. Google speichert sowohl die Information, dass Sie für einen Inhalt +1 gegeben haben, als auch Informationen über die Seite, die Sie beim Klicken auf +1 angesehen haben. Ihre +1 können als Hinweise zusammen mit Ihrem Profilnamen und Ihrem Foto in Google-Diensten, wie etwa in Suchergebnissen oder in Ihrem Google-Profil, oder an anderen Stellen auf Websites und Anzeigen im Internet eingeblendet werden.<br />
-              Google zeichnet Informationen über Ihre +1-Aktivitäten auf, um die Google-Dienste für Sie und andere zu verbessern. Um die Google +1-Schaltfläche verwenden zu können, benötigen Sie ein weltweit sichtbares, öffentliches Google-Profil, das zumindest den für das Profil gewählten Namen enthalten muss. Dieser Name wird in allen Google-Diensten verwendet. In manchen Fällen kann dieser Name auch einen anderen Namen ersetzen, den Sie beim Teilen von Inhalten über Ihr Google-Konto verwendet haben. Die Identität Ihres Google-Profils kann Nutzern angezeigt werden, die Ihre E-Mail-Adresse kennen oder über andere identifizierende Informationen von Ihnen verfügen.<br />
-              <br />
-              Verwendung der erfassten Informationen:<br />
-              Neben den oben erläuterten Verwendungszwecken werden die von Ihnen bereitgestellten Informationen gemäß den geltenden Google-Datenschutzbestimmungen genutzt. Google veröffentlicht möglicherweise zusammengefasste Statistiken über die +1-Aktivitäten der Nutzer bzw. gibt diese an Nutzer und Partner weiter, wie etwa Publisher, Inserenten oder verbundene Websites.
-            </p>
-            <h4>Datenschutzerklärung für die Nutzung von Twitter</h4>
-            <p>
-              Auf unseren Seiten sind Funktionen des Dienstes Twitter eingebunden. Diese Funktionen werden angeboten durch die Twitter Inc., 795 Folsom St., Suite 600, San Francisco, CA 94107, USA. Durch das Benutzen von Twitter und der Funktion "Re-Tweet" werden die von Ihnen besuchten Webseiten mit Ihrem Twitter-Account verknüpft und anderen Nutzern bekannt gegeben. Dabei werden auch Daten an Twitter übertragen.
-            </p>
-            <p>
-              Wir weisen darauf hin, dass wir als Anbieter der Seiten keine Kenntnis vom Inhalt der übermittelten Daten sowie deren Nutzung durch Twitter erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerklärung von Twitter unter <a href="http://twitter.com/privacy" target="_blank">http://twitter.com/privacy</a>.
-            </p>
-            <p>
-              Ihre Datenschutzeinstellungen bei Twitter können Sie in den Konto-Einstellungen unter <a href="http://twitter.com/account/settings" target="_blank">http://twitter.com/account/settings</a>ändern.
-            </p>
-          </div>
-        </div>
-        <div class="help code">
-          <h2>help [code mode]</h2>
-          <h4>change colour</h4>
-          <p>
-            <span class="icon">c</span><span class="icon">l</span>Move the mouse horizontally to change the hue<br />
-            <span class="icon">d</span><span class="icon">k</span>Move the mouse vertically to change the lightness<br />
-            <span class="icon">e</span><span class="icon">r</span>Scroll to change the saturation<br />
-          </p>
-          <h4>ui elements</h4>
-          <p>
-            <span class="icon">a</span>Left-Click on the current colour to lock/unlock the current colour<br />
-            <span class="icon">b</span>Click the lock to unlock the current colour<br />
-            <span class="icon">f</span>Click on the current colour to save the colour (and add a new one)<br />
-            <span class="icon">1</span>Swap with previous colour<br />
-            <span class="icon">3</span>Swap with next colour<br />
-            <span class="icon">2</span>Delete colour
-          </p>
-          <h4>keyboard</h4>
-          <p>
-            Hold the ctrl-button to see/use the shortcuts.
-          </p>
-        </div>
-        <div class="help scheme">
-          <h2>help [scheme mode]</h2>
-          <h4>change colour</h4>
-          <p>
-            <span class="icon">c</span><span class="icon">l</span>Move the mouse horizontally to change the hue<br />
-            <span class="icon">d</span><span class="icon">k</span>Move the mouse vertically to change the lightness<br />
-            <span class="icon">e</span><span class="icon">j</span>Scroll to change the contrast of the scheme<br />
-          </p>
-          <h4>ui elements</h4>
-          <p>
-            <span class="icon">a</span>Click on the current colour to lock the current colour<br />
-            <span class="icon">b</span>Click the lock to unlock the current colour<br />
-          </p>
-          <h4>keyboard</h4>
-          <p>
-            Hold the ctrl-button to see/use the shortcuts.
-          </p>
-        </div>
-        <div class="right">
-          <button>BACK</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="fb-root"></div>
-  {{> analytics}}
+  {{> app}}
 </body>
 
+<template name="app">
+  <table>
+    <colgroup>
+      <col width="30px">
+      <col width="*">
+    </colgroup>
+    <tr>
+      <td class="menu">
+        {{> menu}}
+        {{> social}}
+      </td>
+      <td id="main" class="container perspective">
+        {{> loading}}
+        <div class="page page-scheme">
+          {{> scheme}}
+        </div>
+        {{> help}}
+        {{> legal}}
+      </td>
+    </tr>
+  </table>
+  {{> analytics}}
+</template>
+
 <template name="menu">
-  <nav>
-    <div class="logo">
-      <a href="#"><img src="colourcode-logo.png" alt=""></a>
-      <br/>
-      <span>
-        <input type="radio" name="mode" id="mode-code" value="code" checked /><label for="mode-code">code</label>
-        <input type="radio" name="mode" id="mode-scheme" value="scheme" /><label for="mode-scheme">scheme</label>
-      </span>
+  <div class="menu-item menu-logo">
+    <div class="icon-colourcode"></div>
+    <span>colourcode</span>
+  </div>
+  <div
+    class="menu-item menu-static {{menu-class "menu-none"}} menu-none"
+    data-page="1"
+    data-page-name="menu-none"
+  >
+    <ul class="icon-scheme scheme-none"><li/><li/><li/><li/><li/><li/><li/><li/><li/><li/><li/><li/></ul>
+    <span>free build</span>
+  </div>
+  <div
+    class="menu-item menu-static {{menu-class "menu-monochrome"}} menu-monochrome"
+    data-page="1"
+    data-page-name="menu-monochrome"
+  >
+    <ul class="icon-scheme scheme-monochrome"><li/><li/><li/><li/><li/></ul>
+    <span>monochrome</span>
+  </div>
+  <div
+    class="menu-item menu-static {{menu-class "menu-monochrome-dark"}} menu-monochrome-dark"
+    data-page="1"
+    data-page-name="menu-monochrome-dark"
+  >
+    <ul class="icon-scheme scheme-monochrome-dark"><li/><li/><li/><li/><li/></ul>
+    <span>monochrome &amp; dark gray</span>
+  </div>
+  <div
+    class="menu-item menu-static {{menu-class "menu-monochrome-light"}} menu-monochrome-light"
+    data-page="1"
+    data-page-name="menu-monochrome-light"
+  >
+    <ul class="icon-scheme scheme-monochrome-light"><li/><li/><li/><li/><li/></ul>
+    <span>monochrome &amp; light gray</span>
+  </div>
+  <div
+    class="menu-item menu-static {{menu-class "menu-analogic"}} menu-analogic"
+    data-page="1"
+    data-page-name="menu-analogic"
+  >
+    <ul class="icon-scheme scheme-analogic"><li/><li/><li/><li/><li/></ul>
+    <span>analogic</span>
+  </div>
+  <div
+    class="menu-item menu-static {{menu-class "menu-analogic-complement"}} menu-analogic-complement"
+    data-page="1"
+    data-page-name="menu-analogic-complement"
+  >
+    <ul class="icon-scheme scheme-analogic-complement"><li/><li/><li/><li/><li/></ul>
+    <span>analogic &amp; complement</span>
+  </div>
+  <div
+    class="menu-item menu-static {{menu-class "menu-complement"}} menu-complement"
+    data-page="1"
+    data-page-name="menu-complement"
+  >
+    <ul class="icon-scheme scheme-complement"><li/><li/><li/><li/><li/></ul>
+    <span>complement</span>
+  </div>
+  <div
+    class="menu-item menu-static {{menu-class "menu-triad"}} menu-triad"
+    data-page="1"
+    data-page-name="menu-triad"
+  >
+    <ul class="icon-scheme scheme-triad"><li/><li/><li/><li/><li/></ul>
+    <span>triad</span>
+  </div>
+  <div
+    class="menu-item menu-static {{menu-class "menu-quad"}} menu-quad"
+    data-page="1"
+    data-page-name="menu-quad"
+  >
+    <ul class="icon-scheme scheme-quad"><li/><li/><li/><li/><li/></ul>
+    <span>quad</span>
+  </div>
+  <div class="menu-item menu-convert">
+    <div class="hint--top" data-hint="convert color"><div class="icon-convert"></div></div>
+    <span>
+      <select name="" id="">
+        <option value="hex">hex</option>
+        <option value="rgb">rgb</option>
+        <option value="hsl">hsl</option>
+        <option value="hsv">hsv</option>
+        <option value="cmy">cmy</option>
+        <option value="cmyk">cmyk</option>
+        <option value="XYZ">XYZ</option>
+        <option value="Yxy">Yxy</option>
+        <option value="lab">lab</option>
+      </select>
+      <input type="text"/><input type="text"/><input type="text"/><input type="text"/>
+    </span>
+  </div>
+  <div class="menu-item menu-saturation" style="display: none;">
+    <div class="hint--top" data-hint="saturation"><div class="icon-saturation"></div></div>
+    <span><input type="range" min="0" max="100" value="50"><span>50%</span></span>
+  </div>
+  <div class="menu-item menu-save">
+    <div class="hint--top" data-hint="save scheme"><div class="icon-save"></div></div>
+    <span>
+      <div class="hint--top" data-hint="download as .less stylesheet"><span class="icon-less"></span></div>
+      <div class="hint--top" data-hint="download as image"><span class="icon-image"></span></div>
+    </span>
+  </div>
+  <div class="menu-item {{menu-class "menu-submenu"}} menu-submenu">
+    <div class="hint--top" data-hint="submenu"><div class="icon-menu"></div></div>
+    <span>
+      <div class="hint--top" data-hint="help &amp; controls"><span
+        class="icon-help"
+        data-page="2"
+        data-page-name="menu-submenu"
+      ></span></div>
+      <div class="hint--top" data-hint="view source on github"><span class="icon-git"></span></div>
+      <div class="hint--top" data-hint="file bugs &amp; request features"><span class="icon-bugs"></span></div>
+      <div class="hint--top" data-hint="contact via mail"><span class="icon-mail"></span></div>
+      <div class="hint--top" data-hint="legal"><span
+        class="icon-legal"
+        data-page="3"
+        data-page-name="menu-submenu"
+      ></span></div>
+    </span>
+  </div>
+  <div class="menu-item menu-links">
+    <div class="hint--top" data-hint="Links to the authors"><div class="icon-links"></div></div>
+    <span>
+      <table>
+        <tr>
+          <td>Tamino Martinius</td>
+          <td>
+            <div class="hint--top" data-hint="@TaminoMartinius on Twitter">
+              <a target="_blank" href="https://twitter.com/TaminoMartinius" class="icon-twitter"></a>
+            </div>
+          </td>
+          <td>
+            <div class="hint--top" data-hint="Homepage of Tamino Martinius">
+              <a target="_blank" href="http://zaku.eu" class="icon-web"></a>
+            </div>
+          </td>
+          <td>
+            <div class="hint--top" data-hint="Tamino Martinius on Codepen">
+              <a target="_blank" href="http://codepen.io/Zaku/" class="icon-codepen"></a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Andreas Storm</td>
+          <td>
+            <div class="hint--top" data-hint="@st8rmi on Twitter">
+              <a target="_blank" href="https://twitter.com/st8rmi" class="icon-twitter"></a>
+            </div>
+          </td>
+          <td>
+            <div class="hint--top" data-hint="Homepage of Andreas Storm">
+              <a target="_blank" href="http://andreasstorm.com/" class="icon-web"></a>
+            </div>
+          </td>
+          <td>
+            <div class="hint--top" data-hint="Andreas Storm on Dribbble">
+              <a target="_blank" href="http://dribbble.com/andreasstorm" class="icon-dribbble"></a>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </span>
+  </div>
+</template>
+
+<template name="scheme">
+  <div class="scheme count-{{colors.length}}{{#if editActive}} edit-active{{/if}}">
+    <div class="swatches">
+      {{#foreach colors}}
+        <div
+          class="swatch"
+          data-index="{{$index}}"
+          style="
+            background-color: {{colorBack .}};
+            color: {{colorFore .}}
+          ">
+          <div class="pos-t">
+            <span class="icon-trash"></span>
+          </div>
+          <div class="pos-tc">
+            <a target="_blank" href="{{linkLess .}}">
+              <span class="icon-less"></span>
+            </a>
+            <a target="_blank" href="{{linkImage .}}">
+              <span class="icon-image"></span>
+            </a>
+          </div>
+          <div class="pos-c">
+            {{colorName .}}
+          </div>
+          <div class="pos-bc">
+            {{#unless $first}}
+              <span class="icon-left"></span>
+            {{/unless}}
+            {{#unless $last}}
+              <span class="icon-right"></span>
+            {{/unless}}
+          </div>
+          <div class="pos-b">
+            <span class="icon-up"></span>
+          </div>
+        </div>
+      {{/foreach}}
+      {{#if editActive}}
+        <div
+          class="swatch edit"
+          style="
+            background-color: {{colorBack currentColor}};
+            color: {{colorFore currentColor}}
+          ">
+          <div class="pos-c">
+            {{colorName currentColor}}
+          </div>
+        </div>
+      {{else}}
+        <div class="swatch add">
+          <div class="pos-c">
+            +
+          </div>
+        </div>
+      {{/if}}
     </div>
-    <div class="mode">
-      <i>schemes</i><br />
-      <span>
-        <input type="radio" name="scheme" id="scheme-mono" value="mono" />
-        <label for="scheme-mono"><span class="long">monochromatic</span><span class="short">monochromatic</span></label><br/>
-        <input type="radio" name="scheme" id="scheme-mono-d" value="mono-d" /><label for="scheme-mono-d" title="mono &amp; dark gray"><span class="long">monochromatic + dark gray</span><span class="short">mono + dark gray</span></label><br/>
-        <input type="radio" name="scheme" id="scheme-mono-l" value="mono-l" /><label for="scheme-mono-l" title="mono &amp; light gray"><span class="long">monochromatik + light gray</span><span class="short">mono + light gray</span></label><br/>
-        <input type="radio" name="scheme" id="scheme-ana" value="ana" /><label for="scheme-ana" title="analogic colours"><span class="long">analogic</span><span class="short">analogic</span></label><br/>
-        <input type="radio" name="scheme" id="scheme-comp" value="comp" /><label for="scheme-comp" title="complement"><span class="long">complement</span><span class="short">complement</span></label><br/>
-        <input type="radio" name="scheme" id="scheme-ana-c" value="ana-c" /><label for="scheme-ana-c" title="analogic colours &amp; complement"><span class="long">analogic + complement</span><span class="short">ana + comp</span></label><br/>
-        <input type="radio" name="scheme" id="scheme-tri" value="tri" /><label for="scheme-tri" title="triad"><span class="long">triad</span><span class="short">triad</span></label><br/>
-        <input type="radio" name="scheme" id="scheme-quad" value="quad" /><label for="scheme-quad"><span class="long">quad</span><span class="short">quad</span></label>
-      </span>
-    </div>
-    <div class="convert">
-      <div>
-        <i>convert your color</i><br />
-        <span>
-          <input type="radio" name="format" id="format-hex" value="Hex" checked /><label for="format-hex">hex</label>
-          <input type="radio" name="format" id="format-rgb" value="Rgb" /><label for="format-rgb">rgb</label>
-          <input type="radio" name="format" id="format-hsl" value="Hsl" /><label for="format-hsl">hsl</label></span>
-      </div>
-      <div>
-        <input type="text" placeholder="#123456" />
-      </div>
-    </div>
-    <br/>
-    <div class="links">
-      <a href="https://github.com/Zaku-eu/colourco.de" target="_blank" title="view sourcecode on github">
-        <span class="icon">B</span>
-        <i>view source</i>
-      </a><br/>
-      <a title="show help &amp; controls" class="help">
-        <span class="icon">h</span>
-        <i>help</i>
-      </a><br/>
-      <a title="report issue or request feature" href="https://github.com/Zaku-eu/colourco.de/issues" target="_blank">
-        <span class="icon">i</span>
-        <i>report bug / request feature</i>
-      </a><br/>
-      <a title="send mail to Tamino Martinius" href="mailto:dev@zaku.eu">
-        <span class="icon">p</span>
-        <i>contact</i>
-      </a><br/>
-      <a title="show legal" class="legal">
-        <span class="icon" style="margin: 0 0.25em;">§</span>
-        <i>legal</i>
-      </a>
-    </div>
-    <br/>
-    <div class="copyright">
-      <span>Tamino Martinius</span>
-      <a title="Tamino Martinius on Twitter" href="https://twitter.com/TaminoMartinius" target="_blank" class="icon">n</a>
-      <a title="Homepage of Tamino Martinius" href="http://zaku.eu" target="_blank" class="icon">q</a>
-      <a title="Tamino Martinius on Codepen" href="http://codepen.io/Zaku/" target="_blank" class="icon">o</a><br />
-      <span style="margin-right: 1.2em;">Andreas Storm</span>
-      <a title="Andreas Storm on Twitter" href="https://twitter.com/st8rmi" target="_blank" class="icon">n</a>
-      <a title="Homepage of Andreas Storm" href="http://andreasstorm.com" target="_blank" class="icon">q</a>
-      <a title="Andreas Storm on Dribbble" href="http://dribbble.com/andreasstorm" target="_blank" class="icon">m</a>
-    </div>
-    <br/>
-    <div class="social">
+  </div>
+  <div class="scheme">
+    <div class="details"></div>
+  </div>
+</template>
+
+<template name="loading">
+  <div class="page page-loading">
+    <h1><span>loading</span><b>Colour</b>code</h1>
+  </div>
+</template>
+
+<template name="help">
+  <div class="page page-help">
+    <h1><span>how it works</span><b>Help &amp;</b> Controls</h1>
+  </div>
+</template>
+
+<template name="social">
+   <div class="menu-item menu-social">
+    <div class="icon-social"></div>
+    <div>
       <div class="fb">
         <div class="fb-like" data-href="http://colourco.de/" data-send="false" data-layout="button_count" data-width="200" data-show-faces="false" data-font="arial"></div>
       </div>
       <div class="tw">
         <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://colourco.de" data-via="TaminoMartinius" data-lang="en" data-related="TaminoMartinius"></a>
       </div>
-      <div style="clear: both;"></div>
       <div class="po">
         <div class="g-plusone" data-href="http://colourco.de" data-size="medium"></div>
       </div>
@@ -300,22 +308,133 @@
         <a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://colourco.de"></a>
       </div>
     </div>
+  </div>
+  <div class="menu-item menu-commercial">
+    <div class="icon-commercial"></div>
     <div class="ads">
       <div id="influads_block" class="influads_block"></div>
     </div>
-    <!--
-    <div class="shortcuts code">
-      ctrl + <span class="icon" title="change hue">l</span> left/right
-      <span class="icon" title="change lightness">k</span> up/down
-      <span class="icon" title="change saturation">r</span> shift + up/down
+  </div>
+</template>
+
+<template name="legal">
+  <div class="page page-legal">
+    <h1><span>who we are</span><b>About &amp;</b> Legal</h1>
+    <div>
+      <b>Contentwise responsible person<br/>in accordance with §5 TMG</b>
+      <p>
+        <a href="http://zaku.eu" target="_blank">Zaku.eu</a> - Tamino Martinius<br />
+        Lehdenstraße 21<br />
+        DE 06847 Dessau-Roßlau<br />
+        mail: <a href="mailto:">info@zaku.eu</a><br />
+        phone: +49 1577 3752563<br />
+        USt-IdNr.: DE284757237
+      </p>
     </div>
-    <div class="shortcuts scheme">
-      ctrl + <span class="icon" title="change hue">l</span> left/right
-      <span class="icon" title="change lightness">k</span> up/down
-      <span class="icon" title="change contrast">j</span> shift + up/down
+    <div>
+      <b>Website, Layout &amp; Design,<br/>Database application</b>
+      <p>
+        Zaku.eu - Tamino Martinius<br />
+        Lehdenstraße 21<br />
+        DE 06847 Dessau-Roßlau
+      </p>
+      <h4>Design</h4>
+      <p>
+        Andreas Storm<br />
+        B.-Kellermann-Str. 6<br />
+        DE 06366 Köthen
+      </p>
     </div>
-    -->
-  </nav>
+    <div>
+      <b>bibliography</b><br>
+      <h4>Fonts</h4>
+      <p>
+        <a href="http://icomoon.io" target="_blank">IcoMoon</a> - <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a><br />
+        <a href="http://www.webhostinghub.com/" target="_blank">WebHostingHub</a> - <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>
+      </p>
+      <h4>Legal</h4>
+      <p>
+        <a href="http://www.e-recht24.de/impressum-generator.html" target="_blank">Impressum-Generator</a> von eRecht24.
+      </p>
+      <h4>Disclaimer</h4>
+      <p>
+        Allgemein: <a href="http://www.e-recht24.de/muster-disclaimer.htm" target="_blank">Disclaimer</a> von eRecht24.<br />
+        Facebook: <a href="http://www.e-recht24.de/artikel/datenschutz/6590-facebook-like-button-datenschutz-disclaimer.html" target="_blank">Facebook Disclaimer</a> von eRecht24.<br />
+        Google: <a href="http://www.google.com/intl/de_ALL/analytics/tos.html" target="_blank">Google Analytics Bedingungen</a><br />
+        Google: <a href="http://www.google.com/intl/de/+/policy/+1button.html" target="_blank">Datenschutzerklärung für Google +1</a><br />
+        Twitter: <a href="http://twitter.com/privacy" target="_blank">Twitter Disclaimer</a>
+      </p>
+    </div>
+    {{! german law forces me to add this ugly text}}
+    <div>
+      <b>disclaimer</b><br/>
+      <h4>Haftung für Inhalte</h4>
+      <p>Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+      <h4>Haftung für Links</h4>
+      <p>Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
+      <h4>Urheberrecht</h4>
+      <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</p>
+    </div>
+    <div>
+      <b>Privacy</b>
+      <p>
+        Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder eMail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.
+      </p>
+      <p>
+        Wir weisen darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.
+      </p>
+      <p>
+        Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.
+      </p>
+      <h4>Datenschutzerklärung für die Nutzung von Facebook-Plugins (Like-Button)</h4>
+      <p>
+        Auf unseren Seiten sind Plugins des sozialen Netzwerks Facebook, 1601 South California Avenue, Palo Alto, CA 94304, USA integriert. Die Facebook-Plugins erkennen Sie an dem Facebook-Logo oder dem "Like-Button" ("Gefällt mir") auf unserer Seite. Eine Übersicht über die Facebook-Plugins finden Sie hier: <a href="http://developers.facebook.com/docs/plugins/" target="_blank">http://developers.facebook.com/docs/plugins/</a>.<br />
+        Wenn Sie unsere Seiten besuchen, wird über das Plugin eine direkte Verbindung zwischen Ihrem Browser und dem Facebook-Server hergestellt. Facebook erhält dadurch die Information, dass Sie mit Ihrer IP-Adresse unsere Seite besucht haben. Wenn Sie den Facebook "Like-Button" anklicken während Sie in Ihrem Facebook-Account eingeloggt sind, können Sie die Inhalte unserer Seiten auf Ihrem Facebook-Profil verlinken. Dadurch kann Facebook den Besuch unserer Seiten Ihrem Benutzerkonto zuordnen. Wir weisen darauf hin, dass wir als Anbieter der Seiten keine Kenntnis vom Inhalt der übermittelten Daten sowie deren Nutzung durch Facebook erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerklärung von facebook unter <a href="http://de-de.facebook.com/policy.php" target="_blank">http://de-de.facebook.com/policy.php</a>
+      </p>
+      <p>
+        Wenn Sie nicht wünschen, dass Facebook den Besuch unserer Seiten Ihrem Facebook-Nutzerkonto zuordnen kann, loggen Sie sich bitte aus Ihrem Facebook-Benutzerkonto aus.
+      </p>
+      <h4>Datenschutzerklärung für die Nutzung von Google Analytics</h4>
+      <p>
+        Diese Website benutzt Google Analytics, einen Webanalysedienst der Google Inc. ("Google"). Google Analytics verwendet sog. "Cookies", Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie ermöglichen. Die durch den Cookie erzeugten Informationen über Ihre Benutzung dieser Website werden in der Regel an einen Server von Google in den USA übertragen und dort gespeichert. Im Falle der Aktivierung der IP-Anonymisierung auf dieser Webseite wird Ihre IP-Adresse von Google jedoch innerhalb von Mitgliedstaaten der Europäischen Union oder in anderen Vertragsstaaten des Abkommens über den Europäischen Wirtschaftsraum zuvor gekürzt.
+      </p>
+      <p>
+        Nur in Ausnahmefällen wird die volle IP-Adresse an einen Server von Google in den USA übertragen und dort gekürzt. Im Auftrag des Betreibers dieser Website wird Google diese Informationen benutzen, um Ihre Nutzung der Website auszuwerten, um Reports über die Websiteaktivitäten zusammenzustellen und um weitere mit der Websitenutzung und der Internetnutzung verbundene Dienstleistungen gegenüber dem Websitebetreiber zu erbringen. Die im Rahmen von Google Analytics von Ihrem Browser übermittelte IP-Adresse wird nicht mit anderen Daten von Google zusammengeführt.
+      </p>
+      <p>
+        Sie können die Speicherung der Cookies durch eine entsprechende Einstellung Ihrer Browser-Software verhindern; wir weisen Sie jedoch darauf hin, dass Sie in diesem Fall gegebenenfalls nicht sämtliche Funktionen dieser Website vollumfänglich werden nutzen können. Sie können darüber hinaus die Erfassung der durch das Cookie erzeugten und auf Ihre Nutzung der Website bezogenen Daten (inkl. Ihrer IP-Adresse) an Google sowie die Verarbeitung dieser Daten durch Google verhindern, indem sie das unter dem folgenden Link verfügbare Browser-Plugin herunterladen und installieren: <a href="http://tools.google.com/dlpage/gaoptout?hl=de">http://tools.google.com/dlpage/gaoptout?hl=de</a>.
+      </p>
+      <h4>Datenschutzerklärung für die Nutzung von Google Adsense</h4>
+      <p>
+        Diese Website benutzt Google AdSense, einen Dienst zum Einbinden von Werbeanzeigen der Google Inc. ("Google"). Google AdSense verwendet sog. "Cookies", Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website ermöglicht. Google AdSense verwendet auch so genannte Web Beacons (unsichtbare Grafiken). Durch diese Web Beacons können Informationen wie der Besucherverkehr auf diesen Seiten ausgewertet werden.
+      </p>
+      <p>
+        Die durch Cookies und Web Beacons erzeugten Informationen über die Benutzung dieser Website (einschließlich Ihrer IP-Adresse) und Auslieferung von Werbeformaten werden an einen Server von Google in den USA übertragen und dort gespeichert. Diese Informationen können von Google an Vertragspartner von Google weiter gegeben werden. Google wird Ihre IP-Adresse jedoch nicht mit anderen von Ihnen gespeicherten Daten zusammenführen.
+      </p>
+      <p>
+        Sie können die Installation der Cookies durch eine entsprechende Einstellung Ihrer Browser Software verhindern; wir weisen Sie jedoch darauf hin, dass Sie in diesem Fall gegebenenfalls nicht sämtliche Funktionen dieser Website voll umfänglich nutzen können. Durch die Nutzung dieser Website erklären Sie sich mit der Bearbeitung der über Sie erhobenen Daten durch Google in der zuvor beschriebenen Art und Weise und zu dem zuvor benannten Zweck einverstanden.
+      </p>
+      <h4>Datenschutzerklärung für die Nutzung von Google +1</h4>
+      <p>
+        Erfassung und Weitergabe von Informationen:<br />
+        Mithilfe der Google +1-Schaltfläche können Sie Informationen weltweit veröffentlichen. über die Google +1-Schaltfläche erhalten Sie und andere Nutzer personalisierte Inhalte von Google und unseren Partnern. Google speichert sowohl die Information, dass Sie für einen Inhalt +1 gegeben haben, als auch Informationen über die Seite, die Sie beim Klicken auf +1 angesehen haben. Ihre +1 können als Hinweise zusammen mit Ihrem Profilnamen und Ihrem Foto in Google-Diensten, wie etwa in Suchergebnissen oder in Ihrem Google-Profil, oder an anderen Stellen auf Websites und Anzeigen im Internet eingeblendet werden.<br />
+        Google zeichnet Informationen über Ihre +1-Aktivitäten auf, um die Google-Dienste für Sie und andere zu verbessern. Um die Google +1-Schaltfläche verwenden zu können, benötigen Sie ein weltweit sichtbares, öffentliches Google-Profil, das zumindest den für das Profil gewählten Namen enthalten muss. Dieser Name wird in allen Google-Diensten verwendet. In manchen Fällen kann dieser Name auch einen anderen Namen ersetzen, den Sie beim Teilen von Inhalten über Ihr Google-Konto verwendet haben. Die Identität Ihres Google-Profils kann Nutzern angezeigt werden, die Ihre E-Mail-Adresse kennen oder über andere identifizierende Informationen von Ihnen verfügen.<br />
+        <br />
+        Verwendung der erfassten Informationen:<br />
+        Neben den oben erläuterten Verwendungszwecken werden die von Ihnen bereitgestellten Informationen gemäß den geltenden Google-Datenschutzbestimmungen genutzt. Google veröffentlicht möglicherweise zusammengefasste Statistiken über die +1-Aktivitäten der Nutzer bzw. gibt diese an Nutzer und Partner weiter, wie etwa Publisher, Inserenten oder verbundene Websites.
+      </p>
+      <h4>Datenschutzerklärung für die Nutzung von Twitter</h4>
+      <p>
+        Auf unseren Seiten sind Funktionen des Dienstes Twitter eingebunden. Diese Funktionen werden angeboten durch die Twitter Inc., 795 Folsom St., Suite 600, San Francisco, CA 94107, USA. Durch das Benutzen von Twitter und der Funktion "Re-Tweet" werden die von Ihnen besuchten Webseiten mit Ihrem Twitter-Account verknüpft und anderen Nutzern bekannt gegeben. Dabei werden auch Daten an Twitter übertragen.
+      </p>
+      <p>
+        Wir weisen darauf hin, dass wir als Anbieter der Seiten keine Kenntnis vom Inhalt der übermittelten Daten sowie deren Nutzung durch Twitter erhalten. Weitere Informationen hierzu finden Sie in der Datenschutzerklärung von Twitter unter <a href="http://twitter.com/privacy" target="_blank">http://twitter.com/privacy</a>.
+      </p>
+      <p>
+        Ihre Datenschutzeinstellungen bei Twitter können Sie in den Konto-Einstellungen unter <a href="http://twitter.com/account/settings" target="_blank">http://twitter.com/account/settings</a>ändern.
+      </p>
+    </div>
+  </div>
 </template>
 
 <template name="analytics"></template>
