@@ -1,5 +1,9 @@
 converter =
   bounds:
+    hex:
+      r: {min: 0, max: 1, f: 255}       # r ∊ [0, 1]    red
+      g: {min: 0, max: 1, f: 255}       # g ∊ [0, 1]    green
+      b: {min: 0, max: 1, f: 255}       # b ∊ [0, 1]    blue
     rgb:
       r: {min: 0, max: 1, f: 255}       # r ∊ [0, 1]    red
       g: {min: 0, max: 1, f: 255}       # g ∊ [0, 1]    green
@@ -223,18 +227,15 @@ converter =
       # validate input
       cmy = converter.base["rgb-to-cmy"] values
       # logic
-      k = 1
-      k = c if c < k
-      k = m if m < k
-      k = y if y < k
+      k = Math.min(1, cmy.c, cmy.m, cmy.y)
 
       c = 0 if k is 1 # black
       m = 0 if k is 1 # black
       y = 0 if k is 1 # black
 
-      c = (c - k) / (1 - k) if k > 0
-      m = (m - k) / (1 - k) if k > 0
-      y = (y - k) / (1 - k) if k > 0
+      c = (cmy.c - k) / (1 - k) if k > 0
+      m = (cmy.m - k) / (1 - k) if k > 0
+      y = (cmy.y - k) / (1 - k) if k > 0
       # validate output
       converter.bounds.validate "cmyk", {c: c, m: m, y: y, k: k}
 
@@ -292,10 +293,10 @@ converter =
       XYZ = converter.base["rgb-to-XYZ"] rgb
       x = y = 1
       if not (XYZ.X is XYZ.Y is XYZ.Z is 0)
-        x = X / ( XYZ.X + XYZ.Y + XYZ.Z )
-        y = Y / ( XYZ.X + XYZ.Y + XYZ.Z )
+        x = XYZ.X / ( XYZ.X + XYZ.Y + XYZ.Z )
+        y = XYZ.Y / ( XYZ.X + XYZ.Y + XYZ.Z )
       # validate output
-      converter.bounds.validate "Yxy", {Y: Y, x: x, y: y}
+      converter.bounds.validate "Yxy", {Y: XYZ.Y, x: x, y: y}
 
     # ----------------- #
     # -- lab <-> rgb -- #
@@ -320,7 +321,7 @@ converter =
       converter.base["XYZ-to-rgb"] {X: X, Y: Y, Z: Z}
 
     #rgb -> lab
-    "rgb-to-lab": (r, g, b) -> # see: http://www.easyrgb.com/index.php?X=MATH&H=07#text7
+    "rgb-to-lab": (values) -> # see: http://www.easyrgb.com/index.php?X=MATH&H=07#text7
       # validate input
       rgb = converter.bounds.validate "rgb", values
       # logic
@@ -384,7 +385,7 @@ converter =
     cmyk: (values, tag = null) ->
       cmyk = converter.bounds.validate "cmyk", values, true
       converter.stringlify.tags tag, """
-        hsl([#{cmyk.c}], [#{cmyk.m}], [#{cmyk.y}], [#{cmyk.k}])
+        cmyk([#{cmyk.c}], [#{cmyk.m}], [#{cmyk.y}], [#{cmyk.k}])
       """
     XYZ: (values, tag = null) ->
       XYZ = converter.bounds.validate "XYZ", values, true
@@ -394,33 +395,33 @@ converter =
     Yxy: (values, tag = null) ->
       Yxy = converter.bounds.validate "Yxy", values, true
       converter.stringlify.tags tag, """
-        hsl([#{Yxy.Y}]%, [#{Yxy.x}]%, [#{Yxy.y}]%)
+        Yxy([#{Yxy.Y}]%, [#{Yxy.x}]%, [#{Yxy.y}]%)
       """
     lab:(values, tag = null) ->
       lab = converter.bounds.validate "lab", values, true
       converter.stringlify.tags tag, """
-        hsl([#{lab.l}], [#{lab.a}], [#{lab.b}])
+        lab([#{lab.l}], [#{lab.a}], [#{lab.b}])
       """
 
   scheme:
-    "mono":
+    "monochrome":
       [
-        [
+        {
           ratio: 1
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.1
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
             origin: (value, seed) -> value + seed
-        ]
+        }
       ]
-    "mono-dark":
+    "monochrome-dark":
       [
-        [
+        {
           ratio: 0.4
           h: 
             "mode": "fixed" # unable to change
@@ -431,35 +432,35 @@ converter =
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
             origin: (value, seed) -> value + seed
-        ]
-        [
+        }
+        {
           ratio: 0.6
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.1
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
             origin: (value, seed) -> value + seed
-        ]
+        }
       ]
-    "mono-light":
+    "monochrome-light":
       [
-        [
+        {
           ratio: 0.6
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.1
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
             origin: (value, seed) -> value + seed
-        ]
-        [
+        }
+        {
           ratio: 0.4
           h: 
             "mode": "fixed" # unable to change
@@ -470,207 +471,281 @@ converter =
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
             origin: (value, seed) -> value + seed
-        ]
+        }
       ]
     "analogic":
       [
-        [
+        {
           ratio: 1
           h: 
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.5
           s:
             "mode": "global" # changes hue on all swatches on edit
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.1
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
+            origin: (value, seed) -> value + seed * 0.1
+        }
       ]
     "complement":
       [
-        [
+        {
           ratio: 0.4
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value + 0.5
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.25
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
-        [
+            origin: (value, seed) -> value + seed * 0.25
+        }
+        {
           ratio: 0.6
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.25
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
+            origin: (value, seed) -> value + seed * 0.25
+        }
       ]
     "analogic-complement":
       [
-        [
+        {
           ratio: 0.4
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value + 0.5
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.5
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
-        [
+            origin: (value, seed) -> value + seed * 0.5
+        }
+        {
           ratio: 0.6
           h: 
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.75
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.1
           l:
             "mode": "global" # changes hue on all swatches on edit
-            origin: (value, seed) -> value
-        ]
+            origin: (value, seed) -> value + seed * 0.1
+        }
       ]
     "triad":
       [
-        [
+        {
           ratio: 0.25
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value + 0.33
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.25
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
-        [
+            origin: (value, seed) -> value + seed * 0.25
+        }
+        {
           ratio: 0.25
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value - 0.33
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.25
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
-        [
+            origin: (value, seed) -> value + seed * 0.25
+        }
+        {
           ratio: 0.5
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.25
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
+            origin: (value, seed) -> value + seed * 0.25
+        }
       ]
     "quad":
       [
-        [
-          ratio: 0.25
+        {
+          ratio: 0.20
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value + 0.25
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.25
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
-        [
-          ratio: 0.25
+            origin: (value, seed) -> value + seed * 0.25
+        }
+        {
+          ratio: 0.20
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value + 0.5
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.25
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
-        [
-          ratio: 0.25
+            origin: (value, seed) -> value + seed * 0.25
+        }
+        {
+          ratio: 0.20
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value - 0.25
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.25
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
-        [
-          ratio: 0.25
+            origin: (value, seed) -> value + seed * 0.25
+        }
+        {
+          ratio: 0.40
           h: 
             "mode": "global" # changes hue on all swatches on edit
             origin: (value, seed) -> value
           s:
             "mode": "single" # changes value per swatch
-            origin: (value, seed) -> value + seed
+            origin: (value, seed) -> value + seed * 0.25
           l:
             "mode": "uniform" # changes spread on all sawtches on edit
-            origin: (value, seed) -> value + seed
-        ]
+            origin: (value, seed) -> value + seed * 0.25
+        }
       ]
+    "generate": (mode) ->
+      colors = Session.get "colors"
+      color = Session.get "currentColor"
+      scheme = converter.scheme[mode]
+      ratios = []
+      counts = []
+      for group, groupIndex in scheme
+        ratios.push group.ratio
+        counts.push 0
+      colorWeight = 1 / colors.length
+      for clr, colorIndex in colors
+        maxRatio = -1
+        maxRatioIndex = -1
+        for ratio, ratioIndex in ratios
+          if ratio > maxRatio
+            maxRatio = ratio
+            maxRatioIndex = ratioIndex
+        ratios[maxRatioIndex] -= colorWeight
+        counts[maxRatioIndex] += 1
+      seed = 0.5
+      seedStep = seed / colors.length
+      hSeed = 0
+      sMaxSeed = Math.min(1, color.s + seed / 2)
+      sMinSeed = Math.max(0, sMaxSeed - seed)
+      sSeed = sMinSeed - color.s
+      lMaxSeed = Math.min(1, color.l + seed / 2)
+      lMinSeed = Math.max(0, lMaxSeed - seed)
+      lSeed = lMinSeed - color.l
+      colorIndex = 0
+      for group, groupIndex in scheme
+        for colorCount in [1..counts[groupIndex]]
+          h = group.h.origin color.h, hSeed
+          h += 1 if h < 0
+          h -= 1 if h > 1
+          hSeed += seedStep
+          s = group.s.origin color.s, sSeed
+          sSeed += seedStep
+          l = group.l.origin color.l, lSeed
+          lSeed += seedStep
+          hsl = converter.bounds.validate "hsl", {h: h, s: s, l: l}
+          colors[colorIndex] = hsl
+          colorIndex += 1
+      Session.set "colors", colors
 
   convert: (srcType, targetType, values) ->
     converter.base["rgb-to-#{targetType}"](converter.base["#{srcType}-to-rgb"](values))
 
-Session.setDefault "colors", [{h: 0, s: 0.5, l: 0.5}]
+Session.setDefault "colors", []
 Session.setDefault "currentColor", {h: 0, s: 0.5, l: 0.5}
 Session.setDefault "currentMenu", "menu-none"
 Session.setDefault "schemeMode", "none"
 Session.setDefault "editActive", true
 Session.setDefault "displayColorType", "hex"
+Session.setDefault "liftedColorIndex", null
 
 Handlebars.registerHelper "foreach", (arr, options) ->
-  return options.inverse(@) if options.inverse and !arr.length
-  return arr.map((item, index) ->
+  return _.map arr, (item, index) ->
+    item.$key   = index
     item.$index = index
     item.$first = index is 0
     item.$last  = index is arr.length-1
     return options.fn(item)
-  ).join('')
-
+  .join('')
 Template.menu["menu-class"] = (name) -> if Session.equals("currentMenu", name) then "active" else ""
 
 Template.menu.rendered = () ->
-  $("[data-page]").click () ->
+  $(".menu [data-page]").click () ->
     $this = $ @
     pageIndex = $this.attr("data-page") * 1
+    pageName = $this.attr("data-page-name")
     if pageIndex is 1
-      schemeMode = $this.attr("data-page-name").replace("menu-","")
-      console.log schemeMode
-    Session.set "currentMenu", $this.attr("data-page-name")
+      Session.set "liftedColorIndex", null
+      Session.set "schemeMode", pageName.replace("menu-","")
+      if Session.equals "schemeMode", "none"
+        Session.set "colors", []
+        Session.set "editActive", true
+      else
+        Session.set "editActive", true
+        Session.set "colors", [
+          {h:  0, s: 0.5, l: 0.3}
+          {h: .1, s: 0.5, l: 0.3}
+          {h: .2, s: 0.5, l: 0.3}
+          {h: .3, s: 0.5, l: 0.3}
+          {h: .4, s: 0.5, l: 0.3}
+        ]
+        converter.scheme.generate Session.get("schemeMode")
+    Session.set "currentMenu", pageName
     return
 
-Template.scheme.preserve ["*"]
+Template.scheme.preserve [
+  ".preview"
+  ".details"
+]
+
 Template.scheme.colors = () -> Session.get "colors"
 Template.scheme.currentColor = () -> Session.get "currentColor"
 Template.scheme.editActive = () -> Session.get "editActive"
-Template.scheme.colorName = (hsl) ->
-  dct = Session.get "displayColorType"
-  new Handlebars.SafeString converter.stringlify[dct](converter.convert("hsl", dct, hsl),"b")
+Template.scheme.isLifted = (index) -> Session.equals "liftedColorIndex", index
+Template.scheme.isSchemeMode = () -> result = not Session.equals "schemeMode", "none"
+Template.scheme.isCenter = (index) -> Math.floor(Session.get("colors").length / 2) is index
+Template.scheme.displayColorType = () -> Session.get "displayColorType"
+Template.scheme.bounds = () -> converter.bounds[Session.get "displayColorType"]
+Template.scheme.colorValue = (hsl, key) -> converter.convert("hsl", Session.get("displayColorType"), hsl)[key].toFixed(2)
+Template.scheme.factorizedColorValue = (hsl, key) ->
+  type = Session.get("displayColorType")
+  ~~(converter.convert("hsl", type, hsl)[key] * converter.bounds[type][key].f)
+Template.scheme.isDisplayColorType = (type) -> Session.equals "displayColorType", type
+Template.scheme.getColor = (hsl, type) ->
+  new Handlebars.SafeString converter.stringlify[type](converter.convert("hsl", type, hsl))
+Template.scheme.getColorTag = (hsl, type) ->
+  new Handlebars.SafeString converter.stringlify[type](converter.convert("hsl", type, hsl),"b")
 Template.scheme.colorBack = (hsl) -> converter.stringlify.rgb(converter.convert("hsl", "rgb", hsl))
+Template.scheme.markerLeft = (hsl) -> "#{hsl.h * 100}%"
+Template.scheme.markerTop  = (hsl) -> "#{hsl.l * 100}%"
 Template.scheme.colorFore = (hsl) -> converter.stringlify.fgc(converter.convert("hsl", "fgc", hsl))
 Template.scheme.linkLess = (hsl) ->
   hex = converter.stringlify.hex(converter.convert("hsl", "hex", hsl)).substr(1)
@@ -678,23 +753,64 @@ Template.scheme.linkLess = (hsl) ->
 Template.scheme.linkImage = (hsl) ->
   hex = converter.stringlify.hex(converter.convert("hsl", "hex", hsl)).substr(1)
   "http://api.colourco.de/export/png/%23#{hex}"
+Template.scheme.linkPerma = (hsl) ->
+  hex = converter.stringlify.hex(converter.convert("hsl", "hex", hsl)).substr(1)
+  "/none/%23#{hex}"
+
 Template.scheme.events
   "mousemove .edit": (e) ->
+    color = Session.get "currentColor"
     $swatch = $ e.srcElement
     while not $swatch.hasClass "swatch"
       $swatch = $swatch.parent()
     offset = $swatch.offset()
     h = (e.pageX - offset.left) / ~~($swatch.width() * 0.99)
     l = (e.pageY - offset.top) / $swatch.height()
-    hsl = {h: h, s: 0.5, l: l}
+    hsl = {h: h, s: color.s, l: l}
     Session.set "currentColor", hsl
+
+  "mousemove .edit-scheme": (e) ->
+    color = Session.get "currentColor"
+    $swatches = $ e.srcElement
+    while not $swatches.hasClass "swatches"
+      $swatches = $swatches.parent()
+    offset = $swatches.offset()
+    h = (e.pageX - offset.left) / ~~($swatches.width() * 0.99)
+    l = (e.pageY - offset.top) / $swatches.height()
+    hsl = {h: h, s: color.s, l: l}
+    Session.set "currentColor", hsl
+    converter.scheme.generate Session.get("schemeMode")
   "click .edit": (e) ->
     colors = Session.get "colors"
     colors.push Session.get "currentColor"
     Session.set "colors", colors
     Session.set "editActive", false
+    Session.set "liftedColorIndex", null
+  "click .edit-scheme": (e) ->
+    Session.set "editActive", false
+    Session.set "liftedColorIndex", null
+  "click .icon-lock": (e) ->
+    Session.set "editActive", true
+    Session.set "liftedColorIndex", null
   "click .add": (e) ->
     Session.set "editActive", true
+    Session.set "liftedColorIndex", null
+  "click .add-scheme": (e) ->
+    e.preventDefault()
+    colors = Session.get "colors"
+    colors.push Session.get "currentColor"
+    Session.set "colors", colors
+    Session.set "liftedColorIndex", null
+    converter.scheme.generate Session.get("schemeMode")
+    return false
+  "click .remove-scheme": (e) ->
+    e.preventDefault()
+    colors = Session.get "colors"
+    colors.pop()
+    Session.set "colors", colors
+    Session.set "liftedColorIndex", null
+    converter.scheme.generate Session.get("schemeMode")
+    return false
   "click .icon-trash": (e) ->
     $swatch = $ e.srcElement
     while not $swatch.hasClass "swatch"
@@ -704,6 +820,7 @@ Template.scheme.events
     colors.splice index, 1
     Session.set "editActive", true if colors.length is 0
     Session.set "colors", colors
+    Session.set "liftedColorIndex", null
   "click .icon-left": (e) ->
     $swatch = $ e.srcElement
     while not $swatch.hasClass "swatch"
@@ -713,6 +830,7 @@ Template.scheme.events
     color = colors.splice index, 1
     colors.splice index - 1, 0, color[0]
     Session.set "colors", colors
+    Session.set "liftedColorIndex", null
   "click .icon-right": (e) ->
     $swatch = $ e.srcElement
     while not $swatch.hasClass "swatch"
@@ -722,88 +840,102 @@ Template.scheme.events
     color = colors.splice index, 1
     colors.splice index + 1, 0, color[0]
     Session.set "colors", colors
-###Template.scheme.rendered = () ->
-  $(".edit").mousemove (e) ->
-    $this = $ @
-    parentOffset = $this.parent().offset()
-    h = (e.pageX - parentOffset.left) / ~~($this.width() * 0.99)
-    l = (e.pageY - parentOffset.top) / $this.height()
-    hsl = {h: h, s: 0.5, l: l}
-    Session.set "currentColor", hsl
-    return
-  $(".edit").click (e) ->
-    colors = Session.get "colors"
-    colors.push Session.get "currentColor"
-    Session.set "colors", colors
-    Session.set "editActive", false
-###
-###Template.scheme.rendered = () ->
-  isEditActive = Session.get "editActive"
-  colors = Session.get "savedColors"
-  colorCount = colors.length
-  colorCount += 1 if isEditActive
-  $(".page-scheme").addClass "page-current"
-  $swatches = $ ".swatches"
-  $scheme = $ ".scheme"
-  $scheme.addClass "count-#{colorCount}"
-  $scheme.addClass "add-swatch" if not isEditActive
-  for i in [0..colors.length]
-    hsl = colors[i] if i < colors.length
-    dct = Session.get "displayColorType"
-    rgb = converter.convert "hsl", "rgb", hsl
-    hex = converter.convert "hsl", "hex", hsl
-    fgc = converter.convert "hsl", "fgc", hsl
-    dc  = converter.convert "hsl",  dct , hsl
-    $swatch = $ """
-      <div class="swatch">
-        <div class="pos-t">
-          <span class="icon-trash"></span>
-        </div>
-        <div class="pos-tc">
-          <span class="icon-less"></span>
-          <span class="icon-image"></span>
-        </div>
-        <div class="pos-c">
-          #{converter.stringlify[dct] dc, "b"}
-        </div>
-        <div class="pos-bc">
-          <span class="icon-left"></span>
-          <span class="icon-right"></span>
-        </div>
-        <div class="pos-b">
-          <span class="icon-up"></span>
-        </div>
-      </div>
-    """
-    $swatch.css "background-color", converter.stringlify.rgb rgb
-    $swatch.css "color", converter.stringlify.fgc fgc
-    $swatches.append $swatch
-  $(".swatches > div:last-child").addClass "edit-active" if isEditActive
-  $(".edit-active").mousemove (e) ->
-    $this = $ @
-    dct = Session.get "displayColorType"
-    parentOffset = $this.parent().offset()
-    h = (e.pageX - parentOffset.left) / ~~($this.width() * 0.99)
-    l = (e.pageY - parentOffset.top) / $this.height()
-    hsl = {h: h, s: 0.5, l: l}
-    hex = converter.convert "hsl", "hex", hsl
-    fgc = converter.convert "hsl", "fgc", hsl
-    dc  = converter.convert "hsl",  dct , hsl
-    $this.data "hsl", hsl
-    $this.find(".pos-c").html converter.stringlify[dct](dc, "b")
-    $this.css "background-color", converter.stringlify.hex hex
-    $this.css "color", converter.stringlify.fgc fgc
-    return
-  $(".edit-active").click (e) ->
-    $this = $ @
-    colors = Session.get "savedColors"
-    colors.push $this.data("hsl")
-    console.log colors
-    Session.set "savedColors", colors
-  return
-###
+    Session.set "liftedColorIndex", null
+  "click .icon-up": (e) ->
+    $swatch = $ e.srcElement
+    while not $swatch.hasClass "swatch"
+      $swatch = $swatch.parent()
+    index = $swatch.attr("data-index") * 1
+    Session.set "liftedColorIndex", index
+  "click .icon-down": (e) ->
+    Session.set "liftedColorIndex", null
+  "click [data-type]": (e) ->
+    $swatch = $ e.srcElement
+    while not $swatch.attr("data-type")?
+      $swatch = $swatch.parent()
+    Session.set "displayColorType", $swatch.attr("data-type")
+  "change input[type=range]": (e) ->
+    $range = $ e.srcElement
+    srcColorHsl = Session.get "currentColor"
+    if not Template.scheme.isSchemeMode()
+      srcColorHsl = Session.get("colors")[Session.get("liftedColorIndex")]
+    type = Session.get("displayColorType")
+    srcColor = converter.convert("hsl", type, srcColorHsl)
+    key = $range.attr "data-key"
+    srcColor[key] = $range.val() * 1
+    srcColorHsl = converter.convert(type, "hsl", srcColor)
+    if Template.scheme.isSchemeMode()
+      Session.set "currentColor", srcColorHsl
+      converter.scheme.generate Session.get("schemeMode")
+    else
+      colors = Session.get "colors"
+      colors[Session.get("liftedColorIndex")] = srcColorHsl
+      Session.set "colors", colors
+
+Template.menu.linkLess = () ->
+  colorStr = "http://api.colourco.de/export/less/"
+  for color, colorIndex in Session.get "colors"
+    colorStr += "%2C" if colorIndex > 0
+    colorStr += "%23"
+    colorStr += converter.stringlify.hex(converter.convert("hsl", "hex", color)).substr(1)
+  colorStr
+Template.menu.linkImage = (hsl) ->
+  colorStr = "http://api.colourco.de/export/png/"
+  for color, colorIndex in Session.get "colors"
+    colorStr += "%2C" if colorIndex > 0
+    colorStr += "%23"
+    colorStr += converter.stringlify.hex(converter.convert("hsl", "hex", color)).substr(1)
+  colorStr
+Template.menu.linkPerma = (hsl) ->
+  colorStr = "/"
+  if Session.equals "schemeMode", "none"
+    colorStr += "none/"
+    for color, colorIndex in Session.get "colors"
+      colorStr += "%2C" if colorIndex > 0
+      colorStr += "%23"
+      colorStr += converter.stringlify.hex(converter.convert("hsl", "hex", color)).substr(1)
+  else
+    colorStr += "#{Session.get "schemeMode"}/#{Session.get("colors").length}/%23"
+    colorStr += converter.stringlify.hex(converter.convert("hsl", "hex", Session.get "currentColor")).substr(1)
+  colorStr
+
 
 Meteor.startup () ->
+  path = window.location.pathname
+  pathParts = path.split "/"
+  if pathParts.length is 3 and pathParts[1] is "none"
+    colorStrings = decodeURIComponent(pathParts[2]).split(",")
+    colors = []
+    for colorString, colorIndex in colorStrings
+      if colorString.length is 7
+        r = parseInt colorString.substr(1, 2), 16
+        g = parseInt colorString.substr(3, 2), 16
+        b = parseInt colorString.substr(5, 2), 16
+        hsl = converter.convert "rgb", "hsl", {r: r / 255, g: g / 255, b: b / 255}
+        colors.push hsl
+        Session.set "currentColor", hsl
+    if colors.length > 0
+      Session.set "colors", colors
+      Session.set "editActive", false
+  if pathParts.length is 4
+    colorString = decodeURIComponent(pathParts[3])
+    if colorString.length is 7
+      r = parseInt colorString.substr(1, 2), 16
+      g = parseInt colorString.substr(3, 2), 16
+      b = parseInt colorString.substr(5, 2), 16
+      hsl = converter.convert "rgb", "hsl", {r: r / 255, g: g / 255, b: b / 255}
+      Session.set "currentColor", hsl
+    numColors = pathParts[2] * 1
+    if numColors > 3 and numColors < 11
+      colors = []
+      for colorIndex in [1..numColors]
+        colors.push {h: 0, s: 0, l: 0}
+      Session.set "colors", colors
+      Session.set "currentMenu", "menu-#{pathParts[1]}"
+      Session.set "schemeMode", pathParts[1]
+      Session.set "editActive", false
+      converter.scheme.generate Session.get("schemeMode")
+
   $main = $ "#main"
   $pages = $main.children "div.page"
   isAnimating = false
@@ -841,10 +973,12 @@ Meteor.startup () ->
       onEndAnimation($currPage, $nextPage) if endCurrPage
 
   wheelEvent = (e) ->
-    delta = if (e.wheelDelta || e.detail || e.originalEvent.wheelDelta || e.originalEvent.detail) > 0 then 0.01 else -0.01
+    delta = if (e.wheelDelta || e.detail || e.originalEvent.wheelDelta || e.originalEvent.detail) > 0 then 0.025 else -0.025
     hsl = Session.get "currentColor"
     hsl.s = Math.max(0, Math.min(1, hsl.s + delta))
-    Session.set "currentColor", hsl
+    Session.set "currentColor", hsl if Session.equals "editActive", true
+    converter.scheme.generate Session.get("schemeMode") unless Session.equals "schemeMode", "none"
+
 
   $("body").bind "mousewheel", wheelEvent
   $("body").bind "DOMMouseScroll", wheelEvent
