@@ -760,7 +760,7 @@ Template.scheme.linkPerma = (hsl) ->
 Template.scheme.events
   "mousemove .edit": (e) ->
     color = Session.get "currentColor"
-    $swatch = $ e.srcElement
+    $swatch = $(e.srcElement or e.target)
     while not $swatch.hasClass "swatch"
       $swatch = $swatch.parent()
     offset = $swatch.offset()
@@ -768,14 +768,13 @@ Template.scheme.events
     l = (e.pageY - offset.top) / $swatch.height()
     hsl = {h: h, s: color.s, l: l}
     Session.set "currentColor", hsl
-
   "mousemove .edit-scheme": (e) ->
     color = Session.get "currentColor"
-    $swatches = $ e.srcElement
+    $swatches = $(e.srcElement or e.target)
     while not $swatches.hasClass "swatches"
       $swatches = $swatches.parent()
     offset = $swatches.offset()
-    h = (e.pageX - offset.left) / ~~($swatches.width() * 0.99)
+    h = (e.pageX - offset.left - $swatches.width() * 0.05) / ~~($swatches.width() * 0.9)
     l = (e.pageY - offset.top) / $swatches.height()
     hsl = {h: h, s: color.s, l: l}
     Session.set "currentColor", hsl
@@ -812,7 +811,7 @@ Template.scheme.events
     converter.scheme.generate Session.get("schemeMode")
     return false
   "click .icon-trash": (e) ->
-    $swatch = $ e.srcElement
+    $swatch = $(e.srcElement or e.target)
     while not $swatch.hasClass "swatch"
       $swatch = $swatch.parent()
     index = $swatch.attr "data-index"
@@ -822,7 +821,7 @@ Template.scheme.events
     Session.set "colors", colors
     Session.set "liftedColorIndex", null
   "click .icon-left": (e) ->
-    $swatch = $ e.srcElement
+    $swatch = $(e.srcElement or e.target)
     while not $swatch.hasClass "swatch"
       $swatch = $swatch.parent()
     index = $swatch.attr "data-index"
@@ -832,7 +831,7 @@ Template.scheme.events
     Session.set "colors", colors
     Session.set "liftedColorIndex", null
   "click .icon-right": (e) ->
-    $swatch = $ e.srcElement
+    $swatch = $(e.srcElement or e.target)
     while not $swatch.hasClass "swatch"
       $swatch = $swatch.parent()
     index = $swatch.attr "data-index"
@@ -842,7 +841,7 @@ Template.scheme.events
     Session.set "colors", colors
     Session.set "liftedColorIndex", null
   "click .icon-up": (e) ->
-    $swatch = $ e.srcElement
+    $swatch = $(e.srcElement or e.target)
     while not $swatch.hasClass "swatch"
       $swatch = $swatch.parent()
     index = $swatch.attr("data-index") * 1
@@ -850,12 +849,12 @@ Template.scheme.events
   "click .icon-down": (e) ->
     Session.set "liftedColorIndex", null
   "click [data-type]": (e) ->
-    $swatch = $ e.srcElement
+    $swatch = $(e.srcElement or e.target)
     while not $swatch.attr("data-type")?
       $swatch = $swatch.parent()
     Session.set "displayColorType", $swatch.attr("data-type")
   "change input[type=range]": (e) ->
-    $range = $ e.srcElement
+    $range = $(e.srcElement or e.target)
     srcColorHsl = Session.get "currentColor"
     if not Template.scheme.isSchemeMode()
       srcColorHsl = Session.get("colors")[Session.get("liftedColorIndex")]

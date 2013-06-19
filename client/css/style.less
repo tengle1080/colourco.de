@@ -324,6 +324,7 @@ b {
 }
 
 .perspective {
+  background-color: #222;
   position: relative;
   perspective: 1200px;
 }
@@ -715,9 +716,9 @@ b {
   }
 
   hr.menu-item {
-    border-style: dotted;
+    border: 0;
+    border-bottom: 1px solid #000;
     width: 189px;
-    border-color: #555;
     margin: 0 3px;
   }
 
@@ -728,6 +729,12 @@ b {
       &:first-child > div  { opacity: 0; }
       &.menu-static > span { opacity: 1; }
     }
+  }
+}
+
+html.-moz- {
+  .page {
+    width: 98%;
   }
 }
 
