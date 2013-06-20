@@ -899,8 +899,12 @@ Template.menu.linkPerma = (hsl) ->
     colorStr += converter.stringlify.hex(converter.convert("hsl", "hex", Session.get "currentColor")).substr(1)
   colorStr
 
-
 Meteor.startup () ->
+  Meteor._reload.onMigrate () ->
+    if confirm("The application has been updated!\nPress OK to restart the application.\n(The current status will maybe lost)")
+      [true]
+    else
+      false
   path = window.location.pathname
   pathParts = path.split "/"
   if pathParts.length is 3 and pathParts[1] is "none"
@@ -999,4 +1003,18 @@ Meteor.startup () ->
   setTimeout () ->
     window.nextPage current + 1
   , 250
+
+Template.analytics.rendered = ->
+  if !window._gaq?
+    window._gaq = []
+    _gaq.push(['_setAccount', 'UA-29865051-1'])
+    _gaq.push(['_setDomainName', 'colourco.de'])
+    _gaq.push(['_trackPageview'])
+
+    (->
+      ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      gajs = '.google-analytics.com/ga.js'
+      ga.src = if 'https:' is document.location.protocol then 'https://ssl'+gajs else 'http://www'+gajs
+      s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s)
+    )()
 
