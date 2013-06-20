@@ -719,6 +719,7 @@ Template.menu.rendered = () ->
         ]
         converter.scheme.generate Session.get("schemeMode")
     Session.set "currentMenu", pageName
+    window.nextPage pageIndex
     return
 
 Template.scheme.preserve [
@@ -950,12 +951,15 @@ Meteor.startup () ->
   $pages.eq(current).addClass("page-current")
 
   window.nextPage = (index) ->
+    console.log index
+    console.log isAnimating
     return false if isAnimating
     isAnimating = true;
     $currPage = $pages.eq current
     current = index
 
     $nextPage = $pages.eq(current)
+    isAnimating = false if $nextPage.hasClass "page-current"
     return if $nextPage.hasClass "page-current"
     $nextPage.addClass("page-current")
     outClass = "page-rotateTopSideFirst"
