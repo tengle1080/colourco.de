@@ -761,17 +761,26 @@ Template.scheme.editColor = (type, hsl) ->
   inputs = ""
   cssClass = "edit-color"
   cssClass += " active" if Session.equals "displayColorType", type
-  for key, bound of converter.bounds[type]
-    value = ~~(color[key] * bound.f)
-    value = value.toString(16) if type is "hex"
+  if type is "hex"
+    value = converter.stringlify.hex(color).substr 1
     inputs += """
       <input
         type="text"
         data-type="#{type}"
-        data-key="#{key}"
         value="#{value}"
       />
     """
+  else
+    for key, bound of converter.bounds[type]
+      value = ~~(color[key] * bound.f)
+      inputs += """
+        <input
+          type="text"
+          data-type="#{type}"
+          data-key="#{key}"
+          value="#{value}"
+        />
+      """
   new Handlebars.SafeString """
     <div class="#{cssClass}">
       <div class="hint--left" data-hint="click to choose '#{type}' as standart representation">
@@ -780,6 +789,71 @@ Template.scheme.editColor = (type, hsl) ->
       #{inputs}
     </div>
   """
+Template.scheme.colorSlider = () ->
+  type = Session.get "displayColorType"
+  hsl = Session.get "currentColor"
+  if not Template.scheme.isSchemeMode()
+    hsl = Session.get("colors")[Session.get("liftedColorIndex")]
+
+  color = converter.convert "hsl", type, hsl
+  rows = ""
+  for key, bound of converter.bounds[type]
+    value = ~~(color[key] * bound.f)
+    min = bound.min * bound.f
+    max = bound.max * bound.f
+    valueTag = ""
+    valueTag = "value=\"#{value}\""
+    gradientSteps = 10
+    gradientRange = bound.max - bound.min
+    gradientStep = gradientRange / gradientSteps
+    gradientBody = ""
+    for stepIndex in [0..gradientSteps]
+      percentage = (100 / gradientSteps) * stepIndex
+      gradientValue = bound.min + gradientStep * stepIndex
+      gradientColor = jQuery.extend {}, color
+      gradientColor[key] = gradientValue
+      rgb = converter.stringlify.rgb(converter.convert type, "rgb", gradientColor)
+      gradientBody += ", #{rgb} #{percentage.toFixed(2)}%"
+    gradient = ""
+    gradient += "background:-webkit-linear-gradient(left    #{gradientBody});"
+    gradient += "background:   -moz-linear-gradient(left    #{gradientBody});"
+    gradient += "background:    -ms-linear-gradient(left    #{gradientBody});"
+    gradient += "background:     -o-linear-gradient(left    #{gradientBody});"
+    gradient += "background:        linear-gradient(to right#{gradientBody});"
+    console.log color
+    console.log gradient
+    rows += """
+      <tr>
+        <td>
+          #{key}
+        </td>
+        <td style="#{gradient}">
+          <input
+            type="range"
+            min="#{min}"
+            max="#{max}"
+            data-key="#{key}"
+            step="any"
+            #{valueTag} />
+        </td>
+        <td>
+          #{value}
+        </td>
+      </tr>
+    """
+  new Handlebars.SafeString """
+    <table>
+      <colgroup>
+        <col width="2em" />
+        <col width="*" />
+        <col width="4em" />
+      </colgroup>
+      <tbody>
+        #{rows}
+      </tbody>
+    </table>
+  """
+
 
 
 
@@ -882,14 +956,19 @@ Template.scheme.events
     type = $input.attr "data-type"
     key = $input.attr "data-key"
     value = $input.val()
-    value *= 1 if type isnt "hex"
-    value = parseInt(value, 16) if type is "hex"
-    value /= converter.bounds[type][key].f
     srcColorHsl = Session.get "currentColor"
     if not Template.scheme.isSchemeMode()
       srcColorHsl = Session.get("colors")[Session.get("liftedColorIndex")]
     srcColor = converter.convert("hsl", type, srcColorHsl)
-    srcColor[key] = value
+    if type is "hex"
+      bl = ~~(value.length / 3)
+      srcColor.r = parseInt(new Array(4 - bl).join(value.substr(0 * bl, 1 * bl)), 16) / 255
+      srcColor.g = parseInt(new Array(4 - bl).join(value.substr(1 * bl, 1 * bl)), 16) / 255
+      srcColor.b = parseInt(new Array(4 - bl).join(value.substr(2 * bl, 1 * bl)), 16) / 255
+    else
+      value *= 1
+      value /= converter.bounds[type][key].f
+      srcColor[key] = value
     srcColorHsl = converter.convert(type, "hsl", srcColor)
     if Template.scheme.isSchemeMode()
       Session.set "currentColor", srcColorHsl
@@ -898,7 +977,7 @@ Template.scheme.events
       colors = Session.get "colors"
       colors[Session.get("liftedColorIndex")] = srcColorHsl
       Session.set "colors", colors
-  "change input[type=range]": (e) ->
+  "mouseup input[type=range]": (e) ->
     $range = $(e.srcElement or e.target)
     srcColorHsl = Session.get "currentColor"
     if not Template.scheme.isSchemeMode()
@@ -906,7 +985,8 @@ Template.scheme.events
     type = Session.get("displayColorType")
     srcColor = converter.convert("hsl", type, srcColorHsl)
     key = $range.attr "data-key"
-    srcColor[key] = $range.val() * 1
+    value =
+    srcColor[key] = ($range.val() * 1) / converter.bounds[type][key].f
     srcColorHsl = converter.convert(type, "hsl", srcColor)
     if Template.scheme.isSchemeMode()
       Session.set "currentColor", srcColorHsl
