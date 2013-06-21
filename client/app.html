@@ -336,60 +336,14 @@
                 ">
                 <div class="pos-t">
                   scheme root color<br/><br/>
-                  <div data-type="hex" {{#if isDisplayColorType "hex"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag currentColor "hex"}}
-                  </div>
-                  <div data-type="rgb" {{#if isDisplayColorType "rgb"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag currentColor "rgb"}}
-                  </div>
-                  <div data-type="hsl" {{#if isDisplayColorType "hsl"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag currentColor "hsl"}}
-                  </div>
-                  <div data-type="hsv" {{#if isDisplayColorType "hsv"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag currentColor "hsv"}}
-                  </div>
-                  <div data-type="cmy" {{#if isDisplayColorType "cmy"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag currentColor "cmy"}}
-                  </div>
-                  <div data-type="cmyk" {{#if isDisplayColorType "cmyk"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag currentColor "cmyk"}}
-                  </div>
-                  <div data-type="XYZ" {{#if isDisplayColorType "XYZ"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag currentColor "XYZ"}}
-                  </div>
-                  <div data-type="Yxy" {{#if isDisplayColorType "Yxy"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag currentColor "Yxy"}}
-                  </div>
-                </div>
-                <div class="pos-c">
-                  <table>
-                    <colgroup>
-                      <col width="2em" />
-                      <col width="*" />
-                      <col width="4em" />
-                    </colgroup>
-                    {{#foreach bounds}}
-                      <tr>
-                        <td>
-                          {{$key}}
-                        </td>
-                        <td>
-                          <input
-                            id="range-{{../$index}}-{{$key}}"
-                            name="range-{{../$index}}-{{$key}}"
-                            type="range"
-                            min="{{min}}"
-                            max="{{max}}"
-                            data-key="{{$key}}"
-                            step="any"
-                            value="{{colorValue currentColor $key}}" />
-                        </td>
-                        <td>
-                          {{factorizedColorValue currentColor $key}}
-                        </td>
-                      </tr>
-                    {{/foreach}}
-                  </table>
+                  {{editColor "hex"  currentColor}}
+                  {{editColor "rgb"  currentColor}}
+                  {{editColor "hsl"  currentColor}}
+                  {{editColor "hsv"  currentColor}}
+                  {{editColor "cmy"  currentColor}}
+                  {{editColor "cmyk" currentColor}}
+                  {{editColor "XYZ"  currentColor}}
+                  {{editColor "Yxy"  currentColor}}
                 </div>
               </div>
             {{else}}
@@ -401,60 +355,14 @@
                   color: #aaa;
                 ">
                 <div class="pos-t">
-                  <div data-type="hex" {{#if isDisplayColorType "hex"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag . "hex"}}
-                  </div>
-                  <div data-type="rgb" {{#if isDisplayColorType "rgb"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag . "rgb"}}
-                  </div>
-                  <div data-type="hsl" {{#if isDisplayColorType "hsl"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag . "hsl"}}
-                  </div>
-                  <div data-type="hsv" {{#if isDisplayColorType "hsv"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag . "hsv"}}
-                  </div>
-                  <div data-type="cmy" {{#if isDisplayColorType "cmy"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag . "cmy"}}
-                  </div>
-                  <div data-type="cmyk" {{#if isDisplayColorType "cmyk"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag . "cmyk"}}
-                  </div>
-                  <div data-type="XYZ" {{#if isDisplayColorType "XYZ"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag . "XYZ"}}
-                  </div>
-                  <div data-type="Yxy" {{#if isDisplayColorType "Yxy"}}style="color: #ddd"{{/if}}>
-                    {{getColorTag . "Yxy"}}
-                  </div>
-                </div>
-                <div class="pos-c">
-                  <table>
-                    <colgroup>
-                      <col width="2em" />
-                      <col width="*" />
-                      <col width="4em" />
-                    </colgroup>
-                    {{#foreach bounds}}
-                      <tr>
-                        <td>
-                          {{$key}}
-                        </td>
-                        <td>
-                          <input
-                            id="range-{{../$index}}-{{$key}}"
-                            name="range-{{../$index}}-{{$key}}"
-                            type="range"
-                            min="{{min}}"
-                            max="{{max}}"
-                            data-key="{{$key}}"
-                            step="any"
-                            value="{{colorValue .. $key}}" />
-                        </td>
-                        <td>
-                          {{factorizedColorValue .. $key}}
-                        </td>
-                      </tr>
-                    {{/foreach}}
-                  </table>
+                  {{editColor "hex"  .}}
+                  {{editColor "rgb"  .}}
+                  {{editColor "hsl"  .}}
+                  {{editColor "hsv"  .}}
+                  {{editColor "cmy"  .}}
+                  {{editColor "cmyk" .}}
+                  {{editColor "XYZ"  .}}
+                  {{editColor "Yxy"  .}}
                 </div>
               </div>
             {{/if}}
@@ -659,7 +567,7 @@
         <div class="fb-like" data-href="http://colourco.de/" data-send="false" data-layout="button_count" data-width="200" data-show-faces="false" data-font="arial"></div>
       </div>
       <div class="tw">
-        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://colourco.de" data-via="TaminoMartinius" data-lang="en" data-related="TaminoMartinius"></a>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://colourco.de" data-via="TaminoMartinius @st8rmi" data-lang="en" data-related="TaminoMartinius"></a>
       </div>
       <div class="po">
         <div class="g-plusone" data-href="http://colourco.de" data-size="medium"></div>

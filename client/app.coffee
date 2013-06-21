@@ -139,6 +139,7 @@ converter =
       r = g = b = hsv.v
       if hsv.s > 0
         H = hsv.h * 6
+        vi = ~~H
         v1 = hsv.v * (1 - hsv.s)
         v2 = hsv.v * (1 - hsv.s * (H - vi))
         v3 = hsv.v * (1 - hsv.s * (1 - (H - vi)))
@@ -733,13 +734,11 @@ Template.scheme.editActive = () -> Session.get "editActive"
 Template.scheme.isLifted = (index) -> Session.equals "liftedColorIndex", index
 Template.scheme.isSchemeMode = () -> result = not Session.equals "schemeMode", "none"
 Template.scheme.isCenter = (index) -> Math.floor(Session.get("colors").length / 2) is index
-Template.scheme.displayColorType = () -> Session.get "displayColorType"
 Template.scheme.bounds = () -> converter.bounds[Session.get "displayColorType"]
-Template.scheme.colorValue = (hsl, key) -> converter.convert("hsl", Session.get("displayColorType"), hsl)[key].toFixed(2)
 Template.scheme.factorizedColorValue = (hsl, key) ->
   type = Session.get("displayColorType")
   ~~(converter.convert("hsl", type, hsl)[key] * converter.bounds[type][key].f)
-Template.scheme.isDisplayColorType = (type) -> Session.equals "displayColorType", type
+Template.scheme.displayColorType = (type) -> Session.get "displayColorType"
 Template.scheme.getColor = (hsl, type) ->
   new Handlebars.SafeString converter.stringlify[type](converter.convert("hsl", type, hsl))
 Template.scheme.getColorTag = (hsl, type) ->
@@ -757,6 +756,32 @@ Template.scheme.linkImage = (hsl) ->
 Template.scheme.linkPerma = (hsl) ->
   hex = converter.stringlify.hex(converter.convert("hsl", "hex", hsl)).substr(1)
   "/none/%23#{hex}"
+Template.scheme.editColor = (type, hsl) ->
+  color = converter.convert "hsl", type, hsl
+  inputs = ""
+  cssClass = "edit-color"
+  cssClass += " active" if Session.equals "displayColorType", type
+  for key, bound of converter.bounds[type]
+    value = ~~(color[key] * bound.f)
+    value = value.toString(16) if type is "hex"
+    inputs += """
+      <input
+        type="text"
+        data-type="#{type}"
+        data-key="#{key}"
+        value="#{value}"
+      />
+    """
+  new Handlebars.SafeString """
+    <div class="#{cssClass}">
+      <div class="hint--left" data-hint="click to choose '#{type}' as standart representation">
+        <span data-type="#{type}">#{type}</span>
+      </div>
+      #{inputs}
+    </div>
+  """
+
+
 
 Template.scheme.events
   "mousemove .edit": (e) ->
@@ -849,11 +874,30 @@ Template.scheme.events
     Session.set "liftedColorIndex", index
   "click .icon-down": (e) ->
     Session.set "liftedColorIndex", null
-  "click [data-type]": (e) ->
-    $swatch = $(e.srcElement or e.target)
-    while not $swatch.attr("data-type")?
-      $swatch = $swatch.parent()
-    Session.set "displayColorType", $swatch.attr("data-type")
+  "click span[data-type]": (e) ->
+    $span = $(e.srcElement or e.target)
+    Session.set "displayColorType", $span.attr("data-type")
+  "change input[type=text][data-type]": (e) ->
+    $input = $(e.srcElement or e.target)
+    type = $input.attr "data-type"
+    key = $input.attr "data-key"
+    value = $input.val()
+    value *= 1 if type isnt "hex"
+    value = parseInt(value, 16) if type is "hex"
+    value /= converter.bounds[type][key].f
+    srcColorHsl = Session.get "currentColor"
+    if not Template.scheme.isSchemeMode()
+      srcColorHsl = Session.get("colors")[Session.get("liftedColorIndex")]
+    srcColor = converter.convert("hsl", type, srcColorHsl)
+    srcColor[key] = value
+    srcColorHsl = converter.convert(type, "hsl", srcColor)
+    if Template.scheme.isSchemeMode()
+      Session.set "currentColor", srcColorHsl
+      converter.scheme.generate Session.get("schemeMode")
+    else
+      colors = Session.get "colors"
+      colors[Session.get("liftedColorIndex")] = srcColorHsl
+      Session.set "colors", colors
   "change input[type=range]": (e) ->
     $range = $(e.srcElement or e.target)
     srcColorHsl = Session.get "currentColor"
@@ -955,8 +999,6 @@ Meteor.startup () ->
   $pages.eq(current).addClass("page-current")
 
   window.nextPage = (index) ->
-    console.log index
-    console.log isAnimating
     return false if isAnimating
     isAnimating = true;
     $currPage = $pages.eq current

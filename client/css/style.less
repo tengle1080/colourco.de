@@ -431,6 +431,31 @@ b {
       .details {
         position: absolute;
 
+        .edit-color {
+          width: 8.5em;
+          margin: 0 auto;
+          text-align: left;
+          color: #777;
+
+          &.active {
+            color: #ccc;
+          }
+
+          span {
+            display: inline-block;
+            width: 2.5em;
+            text-align: left;
+          }
+
+          input[type=text] {
+            width:2em;
+            color: #aaa;
+            border: none;
+            text-align: center;
+            background-color: #333;
+          }
+        }
+
         table {
           width: 100%;
 
@@ -521,7 +546,7 @@ b {
     &.count-9  .swatch { width: 10.55%; font-size: 0.75em; }
     &.count-10 .swatch { width: 10.00%; font-size: 0.70em; &:last-child { display: none; }}
     .swatch:last-child { width:  5.00%; 
-      background-color: #222;
+      background-color: #333;
       color: #aaa;
     }
 
@@ -551,11 +576,11 @@ b {
       &.count-9  .swatch { width: 10.00%; }
       &.count-10 .swatch { width:  9.50%; &:last-child { display: none; }}
       .swatch:last-child { width:  5.00%;
-        background-color: #222;
+        background-color: #333;
         color: #aaa;
       }
       .swatch:first-child { width:  5.00%;
-        background-color: #222;
+        background-color: #333;
         color: #aaa;
       }
     }
@@ -582,6 +607,9 @@ b {
     width: 90%;
     margin: 0 auto;
     > tbody > tr, > tr {
+      > th {
+        text-align: left;
+      }
       > td, > th {
         width: 33%;
         vertical-align: top;
@@ -607,7 +635,7 @@ b {
   vertical-align: top;
   transition: width 0.5s;
   overflow: hidden;
-  width: 30px;
+  width: 34px;
 
   a {
     text-decoration: none;
@@ -626,7 +654,7 @@ b {
 
     *[class*=icon] {
       font-size: 16px;
-      padding: 2px;
+      padding: 2px 2px 2px 4px;
       width: 24px;
       float: left;
 
@@ -655,7 +683,17 @@ b {
       opacity: 1;
       &:first-child > div {
         padding-top: 10px;
-        transition: opacity 0.3s;
+        margin-left: -0.15em;
+        transition: margin-left 0.5s ease-in-out;
+        opacity: 0.5;
+        font-size: 1.5em;
+      }
+      &:first-child > span {
+        transition: margin-left 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        display: inline-block;
+        margin-left: 4em;
+        margin-top: 0.4em;
+        opacity: 0;
       }
       > span {
         transition: opacity 0.5s;
@@ -743,7 +781,8 @@ b {
     width: 200px;
     .menu-item {
       opacity: 1;
-      &:first-child > div  { opacity: 0; }
+      &:first-child > div  { margin-left: 1em; }
+      &:first-child > span  { margin-left: 0em; opacity: 1; }
       &.menu-static > span { opacity: 1; }
     }
   }
