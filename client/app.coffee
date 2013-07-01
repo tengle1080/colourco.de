@@ -961,6 +961,7 @@ Template.scheme.events
       srcColorHsl = Session.get("colors")[Session.get("liftedColorIndex")]
     srcColor = converter.convert("hsl", type, srcColorHsl)
     if type is "hex"
+      value = value.replace /^#+/g, ""
       bl = ~~(value.length / 3)
       srcColor.r = parseInt(new Array(4 - bl).join(value.substr(0 * bl, 1 * bl)), 16) / 255
       srcColor.g = parseInt(new Array(4 - bl).join(value.substr(1 * bl, 1 * bl)), 16) / 255
