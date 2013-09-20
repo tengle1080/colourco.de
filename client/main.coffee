@@ -65,12 +65,6 @@ Template.scheme.colorBack = (hsl) -> converter.stringlify.rgb(converter.convert(
 Template.scheme.markerLeft = (hsl) -> "#{hsl.h * 100}%"
 Template.scheme.markerTop  = (hsl) -> "#{hsl.l * 100}%"
 Template.scheme.colorFore = (hsl) -> converter.stringlify.fgc(converter.convert("hsl", "fgc", hsl))
-Template.scheme.linkLess = (hsl) ->
-  hex = converter.stringlify.hex(converter.convert("hsl", "hex", hsl)).substr(1)
-  "http://api.colourco.de/export/less/%23#{hex}"
-Template.scheme.linkImage = (hsl) ->
-  hex = converter.stringlify.hex(converter.convert("hsl", "hex", hsl)).substr(1)
-  "http://api.colourco.de/export/png/%23#{hex}"
 Template.scheme.linkPerma = (hsl) ->
   hex = converter.stringlify.hex(converter.convert("hsl", "hex", hsl)).substr(1)
   "/none/%23#{hex}"
@@ -315,12 +309,11 @@ Template.scheme.events
       colors[Session.get("liftedColorIndex")] = srcColorHsl
       Session.set "colors", colors
 
-Template.menu.linkLess = () ->
-  colorStr = "http://api.colourco.de/export/less/"
+Template.menu.colorStr = () ->
+  colorStr = ""
   for color, colorIndex in Session.get "colors"
-    colorStr += "%2C" if colorIndex > 0
-    colorStr += "%23"
-    colorStr += converter.stringlify.hex(converter.convert("hsl", "hex", color)).substr(1)
+    colorStr += ";" if colorIndex > 0
+    colorStr += converter.stringlify.hex(converter.convert("hsl", "hex", color))
   colorStr
 Template.menu.linkImage = (hsl) ->
   colorStr = "http://api.colourco.de/export/png/"

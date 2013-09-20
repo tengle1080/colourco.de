@@ -135,12 +135,17 @@
   <div class="menu-item menu-static menu-save">
     <div class="hint--top" data-hint="save scheme"><div class="icon-save"></div></div>
     <span>
-      <a target="_blank" href="{{linkLess}}">
+      <a target="_blank" data-colors="{{colorStr}}" href="#" onclick="setSassExport(this);">
+        <div class="hint--top" data-hint="download scheme as .scss">
+          <span class="icon-sass pointer" style="font-size: 1.5em; color: #AAA;">$</span>
+        </div>
+      </a>
+      <a target="_blank" data-colors="{{colorStr}}" href="#" onclick="setLessExport(this);">
         <div class="hint--top" data-hint="download scheme as .less">
           <span class="icon-less pointer"></span>
         </div>
       </a>
-      <a target="_blank" href="{{linkImage}}">
+      <a target="_blank" data-colors="{{colorStr}}" href="#" onclick="setPngExport(this);">
         <div class="hint--top" data-hint="download scheme as .png">
           <span class="icon-image pointer"></span>
         </div>
@@ -251,12 +256,17 @@
               {{#if isSchemeMode}}
                 {{#unless editActive}}
                   <div class="pos-t">
-                    <a target="_blank" href="{{linkLess .}}">
+                    <a target="_blank" data-colors="{{getColor . "hex"}}" href="#" onclick="setSassExport(this);">
+                      <div class="hint--bottom" data-hint="download color as .scss">
+                        <span class="icon-sass" style="font-size: 1.6em;">$</span>
+                      </div>
+                    </a>
+                    <a target="_blank" data-colors="{{getColor . "hex"}}" href="#" onclick="setLessExport(this);">
                       <div class="hint--bottom" data-hint="download color as .less">
                         <span class="icon-less"></span>
                       </div>
                     </a>
-                    <a target="_blank" href="{{linkImage .}}">
+                    <a target="_blank" data-colors="{{getColor . "hex"}}" href="#" onclick="setPngExport(this);">
                       <div class="hint--bottom" data-hint="download color as .png">
                         <span class="icon-image"></span>
                       </div>
@@ -270,12 +280,17 @@
                 {{/unless}}
               {{else}}
                 <div class="pos-t">
-                  <a target="_blank" href="{{linkLess .}}">
+                  <a target="_blank" data-colors="{{getColor . "hex"}}" href="#" onclick="setSassExport(this);">
+                    <div class="hint--bottom" data-hint="download color as .scss">
+                      <span class="icon-sass" style="font-size: 1.6em;">$</span>
+                    </div>
+                  </a>
+                  <a target="_blank" data-colors="{{getColor . "hex"}}" href="#" onclick="setLessExport(this);">
                     <div class="hint--bottom" data-hint="download color as .less">
                       <span class="icon-less"></span>
                     </div>
                   </a>
-                  <a target="_blank" href="{{linkImage .}}">
+                  <a target="_blank" data-colors="{{getColor . "hex"}}" href="#" onclick="setPngExport(this);">
                     <div class="hint--bottom" data-hint="download color as .png">
                       <span class="icon-image"></span>
                     </div>
