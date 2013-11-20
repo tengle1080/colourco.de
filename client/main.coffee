@@ -55,7 +55,7 @@ Template.scheme.isCenter = (index) -> Math.floor(Session.get("colors").length / 
 Template.scheme.bounds = () -> converter.bounds[Session.get "displayColorType"]
 Template.scheme.factorizedColorValue = (hsl, key) ->
   type = Session.get("displayColorType")
-  ~~(converter.convert("hsl", type, hsl)[key] * converter.bounds[type][key].f)
+  Math.round(converter.convert("hsl", type, hsl)[key] * converter.bounds[type][key].f)
 Template.scheme.displayColorType = (type) -> Session.get "displayColorType"
 Template.scheme.getColor = (hsl, type) ->
   new Handlebars.SafeString converter.stringlify[type](converter.convert("hsl", type, hsl))
@@ -84,7 +84,7 @@ Template.scheme.editColor = (type, hsl) ->
     """
   else
     for key, bound of converter.bounds[type]
-      value = ~~(color[key] * bound.f)
+      value = Math.round(color[key] * bound.f)
       inputs += """
         <input
           type="text"
@@ -110,7 +110,7 @@ Template.scheme.colorSlider = () ->
   color = converter.convert "hsl", type, hsl
   rows = ""
   for key, bound of converter.bounds[type]
-    value = ~~(color[key] * bound.f)
+    value = Math.round(color[key] * bound.f)
     min = bound.min * bound.f
     max = bound.max * bound.f
     valueTag = ""
@@ -132,8 +132,6 @@ Template.scheme.colorSlider = () ->
     gradient += "background:    -ms-linear-gradient(left    #{gradientBody});"
     gradient += "background:     -o-linear-gradient(left    #{gradientBody});"
     gradient += "background:        linear-gradient(to right#{gradientBody});"
-    console.log color
-    console.log gradient
     rows += """
       <tr>
         <td>
@@ -176,7 +174,7 @@ Template.scheme.events
     while not $swatch.hasClass "swatch"
       $swatch = $swatch.parent()
     offset = $swatch.offset()
-    h = (e.pageX - offset.left) / ~~($swatch.width() * 0.99)
+    h = (e.pageX - offset.left) / Math.round($swatch.width() * 0.99)
     l = (e.pageY - offset.top) / $swatch.height()
     hsl = {h: h, s: color.s, l: l}
     Session.set "currentColor", hsl
@@ -186,7 +184,7 @@ Template.scheme.events
     while not $swatches.hasClass "swatches"
       $swatches = $swatches.parent()
     offset = $swatches.offset()
-    h = (e.pageX - offset.left - $swatches.width() * 0.05) / ~~($swatches.width() * 0.9)
+    h = (e.pageX - offset.left - $swatches.width() * 0.05) / Math.round($swatches.width() * 0.9)
     l = (e.pageY - offset.top) / $swatches.height()
     hsl = {h: h, s: color.s, l: l}
     Session.set "currentColor", hsl
@@ -274,7 +272,7 @@ Template.scheme.events
     srcColor = converter.convert("hsl", type, srcColorHsl)
     if type is "hex"
       value = value.replace /^#+/g, ""
-      bl = ~~(value.length / 3)
+      bl = Math.round(value.length / 3)
       srcColor.r = parseInt(new Array(4 - bl).join(value.substr(0 * bl, 1 * bl)), 16) / 255
       srcColor.g = parseInt(new Array(4 - bl).join(value.substr(1 * bl, 1 * bl)), 16) / 255
       srcColor.b = parseInt(new Array(4 - bl).join(value.substr(2 * bl, 1 * bl)), 16) / 255
@@ -290,6 +288,40 @@ Template.scheme.events
       colors = Session.get "colors"
       colors[Session.get("liftedColorIndex")] = srcColorHsl
       Session.set "colors", colors
+  "keydown input[type=text][data-type]": (e) ->
+    $input = $(e.srcElement or e.target)
+    type = $input.attr "data-type"
+    key = $input.attr "data-key"
+    keyCode = e.keyCode
+    value = $input.val()
+    srcColorHsl = Session.get "currentColor"
+    if not Template.scheme.isSchemeMode()
+      srcColorHsl = Session.get("colors")[Session.get("liftedColorIndex")]
+    srcColor = converter.convert("hsl", type, srcColorHsl)
+    if type is "hex"
+      value = value.replace /^#+/g, ""
+      bl = Math.round(value.length / 3)
+      srcColor.r = parseInt(new Array(4 - bl).join(value.substr(0 * bl, 1 * bl)), 16) / 255
+      srcColor.g = parseInt(new Array(4 - bl).join(value.substr(1 * bl, 1 * bl)), 16) / 255
+      srcColor.b = parseInt(new Array(4 - bl).join(value.substr(2 * bl, 1 * bl)), 16) / 255
+    else
+      value *= 1
+      if 37 <= keyCode <= 40
+        value += if keyCode is 37 or keyCode is 40 then -1 else +1
+      value /= converter.bounds[type][key].f
+      srcColor[key] = value
+    srcColorHsl = converter.convert(type, "hsl", srcColor)
+    if Template.scheme.isSchemeMode()
+      Session.set "currentColor", srcColorHsl
+      converter.scheme.generate Session.get("schemeMode")
+    else
+      colors = Session.get "colors"
+      colors[Session.get("liftedColorIndex")] = srcColorHsl
+      Session.set "colors", colors
+    if 37 <= keyCode <= 40
+      setTimeout () ->
+        $("input[type=text][data-type=#{type}][data-key=#{key}]").focus()
+      , 50
   "mouseup input[type=range]": (e) ->
     $range = $(e.srcElement or e.target)
     srcColorHsl = Session.get "currentColor"

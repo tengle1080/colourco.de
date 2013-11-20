@@ -41,7 +41,7 @@
       result = {}
       for key, b of converter.bounds[type]
         if factorize is on
-          result[key] = Math.max(b.min * b.f, Math.min(b.max * b.f, ~~(values[key] * b.f)))
+          result[key] = Math.max(b.min * b.f, Math.min(b.max * b.f, Math.round(values[key] * b.f)))
         else
           result[key] = Math.max(b.min, Math.min(b.max, values[key]))
       result
@@ -139,7 +139,7 @@
       r = g = b = hsv.v
       if hsv.s > 0
         H = hsv.h * 6
-        vi = ~~H
+        vi = Math.round H
         v1 = hsv.v * (1 - hsv.s)
         v2 = hsv.v * (1 - hsv.s * (H - vi))
         v3 = hsv.v * (1 - hsv.s * (1 - (H - vi)))
@@ -203,9 +203,9 @@
       # validate input
       rgb = converter.bounds.validate "rgb", values
       # logic
-      y = 1 - rgb.r
+      c = 1 - rgb.r
       m = 1 - rgb.g
-      c = 1 - rgb.b
+      y = 1 - rgb.b
       # validate output
       converter.bounds.validate "cmy", {c: c, m: m, y: y}
 
@@ -230,13 +230,13 @@
       # logic
       k = Math.min(1, cmy.c, cmy.m, cmy.y)
 
-      c = 0 if k is 1 # black
-      m = 0 if k is 1 # black
-      y = 0 if k is 1 # black
+      c = 0 if k > 0.997 # ~black
+      m = 0 if k > 0.997 # ~black
+      y = 0 if k > 0.997 # ~black
 
-      c = (cmy.c - k) / (1 - k) if k > 0
-      m = (cmy.m - k) / (1 - k) if k > 0
-      y = (cmy.y - k) / (1 - k) if k > 0
+      c = (cmy.c - k) / (1 - k) if k > 0.003
+      m = (cmy.m - k) / (1 - k) if k > 0.003
+      y = (cmy.y - k) / (1 - k) if k > 0.003
       # validate output
       converter.bounds.validate "cmyk", {c: c, m: m, y: y, k: k}
 
@@ -678,4 +678,5 @@
       Session.set "colors", colors
 
   convert: (srcType, targetType, values) ->
-    converter.base["rgb-to-#{targetType}"](converter.base["#{srcType}-to-rgb"](values))
+    return converter.bounds.validate(srcType, values) if srcType is targetType
+    return converter.base["rgb-to-#{targetType}"](converter.base["#{srcType}-to-rgb"](values))
