@@ -230,6 +230,10 @@
       # logic
       k = Math.min(1, cmy.c, cmy.m, cmy.y)
 
+      c = cmy.c
+      m = cmy.m
+      y = cmy.y
+
       c = 0 if k > 0.997 # ~black
       m = 0 if k > 0.997 # ~black
       y = 0 if k > 0.997 # ~black
@@ -237,6 +241,7 @@
       c = (cmy.c - k) / (1 - k) if k > 0.003
       m = (cmy.m - k) / (1 - k) if k > 0.003
       y = (cmy.y - k) / (1 - k) if k > 0.003
+
       # validate output
       converter.bounds.validate "cmyk", {c: c, m: m, y: y, k: k}
 
