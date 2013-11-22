@@ -41,11 +41,6 @@ Template.menu.rendered = () ->
     window.nextPage pageIndex
     return
 
-Template.scheme.preserve [
-  ".preview"
-  ".details"
-]
-
 Template.scheme.colors = () -> Session.get "colors"
 Template.scheme.currentColor = () -> Session.get "currentColor"
 Template.scheme.editActive = () -> Session.get "editActive"
@@ -163,9 +158,6 @@ Template.scheme.colorSlider = () ->
       </tbody>
     </table>
   """
-
-
-
 
 Template.scheme.events
   "mousemove .edit": (e) ->
@@ -318,9 +310,9 @@ Template.scheme.events
         colors = Session.get "colors"
         colors[Session.get("liftedColorIndex")] = srcColorHsl
         Session.set "colors", colors
-        setTimeout () ->
-          $("input[type=text][data-type=#{type}][data-key=#{key}]").focus()
-        , 50
+      setTimeout () ->
+        $("input[type=text][data-type=#{type}][data-key=#{key}]").focus()
+      , 50
   "mouseup input[type=range]": (e) ->
     $range = $(e.srcElement or e.target)
     srcColorHsl = Session.get "currentColor"
