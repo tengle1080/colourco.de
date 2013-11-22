@@ -289,39 +289,38 @@ Template.scheme.events
       colors[Session.get("liftedColorIndex")] = srcColorHsl
       Session.set "colors", colors
   "keydown input[type=text][data-type]": (e) ->
-    $input = $(e.srcElement or e.target)
-    type = $input.attr "data-type"
-    key = $input.attr "data-key"
     keyCode = e.keyCode
-    value = $input.val()
-    srcColorHsl = Session.get "currentColor"
-    if not Template.scheme.isSchemeMode()
-      srcColorHsl = Session.get("colors")[Session.get("liftedColorIndex")]
-    srcColor = converter.convert("hsl", type, srcColorHsl)
-    if type is "hex"
-      value = value.replace /^#+/g, ""
-      bl = Math.round(value.length / 3)
-      srcColor.r = parseInt(new Array(4 - bl).join(value.substr(0 * bl, 1 * bl)), 16) / 255
-      srcColor.g = parseInt(new Array(4 - bl).join(value.substr(1 * bl, 1 * bl)), 16) / 255
-      srcColor.b = parseInt(new Array(4 - bl).join(value.substr(2 * bl, 1 * bl)), 16) / 255
-    else
-      value *= 1
-      if 37 <= keyCode <= 40
-        value += if keyCode is 37 or keyCode is 40 then -1 else +1
-      value /= converter.bounds[type][key].f
-      srcColor[key] = value
-    srcColorHsl = converter.convert(type, "hsl", srcColor)
-    if Template.scheme.isSchemeMode()
-      Session.set "currentColor", srcColorHsl
-      converter.scheme.generate Session.get("schemeMode")
-    else
-      colors = Session.get "colors"
-      colors[Session.get("liftedColorIndex")] = srcColorHsl
-      Session.set "colors", colors
     if 37 <= keyCode <= 40
-      setTimeout () ->
-        $("input[type=text][data-type=#{type}][data-key=#{key}]").focus()
-      , 50
+      $input = $(e.srcElement or e.target)
+      type = $input.attr "data-type"
+      key = $input.attr "data-key"
+      value = $input.val()
+      srcColorHsl = Session.get "currentColor"
+      if not Template.scheme.isSchemeMode()
+        srcColorHsl = Session.get("colors")[Session.get("liftedColorIndex")]
+      srcColor = converter.convert("hsl", type, srcColorHsl)
+      if type is "hex"
+        value = value.replace /^#+/g, ""
+        bl = Math.round(value.length / 3)
+        srcColor.r = parseInt(new Array(4 - bl).join(value.substr(0 * bl, 1 * bl)), 16) / 255
+        srcColor.g = parseInt(new Array(4 - bl).join(value.substr(1 * bl, 1 * bl)), 16) / 255
+        srcColor.b = parseInt(new Array(4 - bl).join(value.substr(2 * bl, 1 * bl)), 16) / 255
+      else
+        value *= 1
+        value += if keyCode is 37 or keyCode is 40 then -1 else +1
+        value /= converter.bounds[type][key].f
+        srcColor[key] = value
+      srcColorHsl = converter.convert(type, "hsl", srcColor)
+      if Template.scheme.isSchemeMode()
+        Session.set "currentColor", srcColorHsl
+        converter.scheme.generate Session.get("schemeMode")
+      else
+        colors = Session.get "colors"
+        colors[Session.get("liftedColorIndex")] = srcColorHsl
+        Session.set "colors", colors
+        setTimeout () ->
+          $("input[type=text][data-type=#{type}][data-key=#{key}]").focus()
+        , 50
   "mouseup input[type=range]": (e) ->
     $range = $(e.srcElement or e.target)
     srcColorHsl = Session.get "currentColor"
