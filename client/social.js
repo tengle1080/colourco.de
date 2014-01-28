@@ -1,3 +1,4 @@
+/*
 Meteor.startup(function(){
   //Twitter
   !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = "//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
@@ -20,7 +21,7 @@ Meteor.startup(function(){
         t.parentNode.insertBefore(s, t);
     })();
     //influads
-    (function(){var acc='acc_1318d914_pub';var st='nocss';var or='130';var e=document.getElementsByTagName('script')[0];var d=document.createElement('script');d.src=('https:' == document.location.protocol ?'https://' : 'http://') +'engine.influads.com/show/'+or+'/'+st+'/'+acc;d.type='text/javascript';d.async=true;d.defer=true; e.parentNode.insertBefore(d,e);})();
+    //(function(){var acc='acc_1318d914_pub';var st='nocss';var or='130';var e=document.getElementsByTagName('script')[0];var d=document.createElement('script');d.src=('https:' == document.location.protocol ?'https://' : 'http://') +'engine.influads.com/show/'+or+'/'+st+'/'+acc;d.type='text/javascript';d.async=true;d.defer=true; e.parentNode.insertBefore(d,e);})();
 });
 
 CoinWidgetCom.go({
@@ -47,3 +48,4 @@ CoinWidgetCom.go({
   , lbl_count: "donations"
   , lbl_amount: "LTC"
 });
+*/

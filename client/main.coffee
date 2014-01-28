@@ -461,6 +461,38 @@ Meteor.startup () ->
     window.nextPage current + 1
   , 250
 
+  share =
+    url: "http://colourco.de"
+    message: "colourcode - find your colour scheme http://colourco.de via @TaminoMartinius @st8rmi"
+    id: "TaminoMartinius"
+
+  new GetShare
+    root: $(".menu-social")
+    network: "facebook"
+    share: share
+  new GetShare
+    root: $(".menu-social")
+    network: "twitter"
+    share: share
+  new GetShare
+    root: $(".menu-social")
+    network: "googleplus"
+    share: share
+  new GetShare
+    root: $(".menu-social")
+    network: "flattr"
+    share: share
+  new GetShare
+    root: $(".menu-social")
+    network: "bitcoin"
+    share:
+      id: "16bs6kN6wTVT7NUCMWxjCZ4UCTy3b9KVWX"
+  new GetShare
+    root: $(".menu-social")
+    network: "litecoin"
+    share:
+      id: "LYkd9Vo52NotPCpB6AUQ8Cg7sjF1meLsif"
+
 Template.analytics.rendered = ->
   if !window._gaq?
     window._gaq = []
