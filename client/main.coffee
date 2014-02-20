@@ -439,7 +439,7 @@ Meteor.startup () ->
   wheelEvent = (e) ->
     delta = if (e.wheelDelta || e.detail || e.originalEvent.wheelDelta || e.originalEvent.detail) > 0 then 0.025 else -0.025
     hsl = Session.get "currentColor"
-    hsl.s = Math.max(0, Math.min(1, hsl.s + delta))
+    hsl.s = Math.max(0, Math.min(1, hsl.s - delta))
     Session.set "currentColor", hsl if Session.equals "editActive", true
     converter.scheme.generate Session.get("schemeMode") unless Session.equals "schemeMode", "none"
 
